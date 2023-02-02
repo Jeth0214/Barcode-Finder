@@ -1,0 +1,6 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "Barcode Finder",
+	"webDir": "www",
+	"bundledWebRuntime": false
+}
