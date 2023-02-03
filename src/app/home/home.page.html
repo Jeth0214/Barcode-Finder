@@ -1,15 +1,68 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title size="large">Find Your barcode</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content [fullscreen]="true" class="container ion-padding ion-margin-vertical">
+  <div class="barcode">
+    <img src="../../assets/images/home/barcode .gif" alt="barcode">
+  </div>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Find Your barcode</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div class="suppliers ion-margin-top">
+    <!-- GSK ans Aspen -->
+    <ion-row class="ion-justify-content-between ion-margin-top">
+      <ion-col size="5" class="supplier supplier--gsk">
+        <a class="supplier__link">
+          <i class="fa-thin fa-truck-field"></i>
+          <h3 class="supplier__name">GSK</h3>
+          <p class=" supplier__code">74</p>
+        </a>
+      </ion-col>
+      <ion-col size="5" class="supplier supplier--aspen">
+        <a class="supplier__link">
+          <h3 class="supplier__name">ASPEN</h3>
+          <p class="supplier__code">85</p>
+        </a>
+      </ion-col>
+    </ion-row>
 
+    <!-- Roche and Atnahs -->
+    <ion-row class="ion-justify-content-between ion-margin-top">
+      <ion-col size="5" class="supplier supplier--roche">
+        <a class="supplier__link">
+          <h3 class="supplier__name">Roche</h3>
+          <p class="supplier__code">89</p>
+        </a>
+      </ion-col>
+      <ion-col size="5" class="supplier supplier--atnahs">
+        <a class="supplier__link">
+          <h3 class="supplier__name">ATNAHS</h3>
+          <p class="supplier__brand-code">19</p>
+        </a>
+      </ion-col>
+    </ion-row>
+
+    <!-- MSD and Pharma -->
+    <ion-row class="ion-justify-content-between ion-margin-top">
+      <ion-col size="5" class="supplier supplier--msd">
+        <a class="supplier__link">
+          <h3 class="supplier__name">MSD</h3>
+          <p class="supplier__code">09</p>
+        </a>
+      </ion-col>
+      <ion-col size="5" class="supplier supplier--pharma">
+        <a class="supplier__link">
+          <h3 class="supplier__name">PHARMA</h3>
+          <p class="supplier__code">79</p>
+        </a>
+      </ion-col>
+    </ion-row>
+
+    <!-- Organon -->
+    <ion-row class="ion-margin-top">
+      <ion-col size="12" class="supplier supplier--organon">
+        <a class="supplier__link">
+          <h3 class="supplier__name">ORGANON</h3>
+          <p class="supplier__code">18</p>
+        </a>
+      </ion-col>
+    </ion-row>
+
+  </div>
 
 </ion-content>
