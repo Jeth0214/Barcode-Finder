@@ -1,9 +1,44 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>supplier</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>GSK</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <ion-searchbar placeholder="Custom Placeholder"></ion-searchbar>
+
+  <ion-button class="ion-float-right ion-padding-end">
+    <ion-icon name="add-circle-outline"></ion-icon>
+    Add
+  </ion-button>
+
+  <div class="ion-padding ion-no-margin">
+    <ion-list>
+      <ion-item-sliding>
+        <ion-item button detail="true" lines="full">
+          <ion-thumbnail slot="start">
+            <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
+          </ion-thumbnail>
+          <ion-label class="ion-no-margin">
+            <h3>Gt-123456</h3>
+            <p>01/10/23</p>
+          </ion-label>
+        </ion-item>
+
+        <ion-item-options side="end">
+          <ion-item-option color="primary" (click)="onEdit()">
+            <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+          </ion-item-option>
+          <ion-item-option color="danger" (click)="onDelete()">
+            <ion-icon slot="icon-only" name="trash"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+
+      </ion-item-sliding>
+    </ion-list>
+  </div>
 
 </ion-content>

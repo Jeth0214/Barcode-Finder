@@ -7,10 +7,6 @@ const routes: Routes = [
   {
     path: '',
     component: SupplierPage
-  },
-  {
-    path: 'supplier/:id',
-    component: SupplierPage
   }
 ];
 
@@ -18,4 +14,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class SupplierPageRoutingModule { }
+export class SupplierPageRoutingModule {}
