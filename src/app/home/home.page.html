@@ -7,15 +7,15 @@
     <!-- GSK ans Aspen -->
     <ion-row class="ion-justify-content-between ion-margin-top">
       <ion-col *ngFor="let supplier of suppliers" size="5" class="supplier ion-margin-bottom"
-        [ngClass]="'supplier--' + supplier.name" [routerLink]="['/supplier', supplier.id]">
-        <a class="supplier__link">
+        [ngClass]="'supplier--' + supplier.name" routerLink="/supplier/{{supplier.id}}">
+        <div class="supplier__link">
           <div class="supplier__image">
             <img [src]="'../../assets/images/home/' + supplier.image +'-solid.svg'" alt="" aria-hidden="true">
-            <div class="sr-only"> {{ supplier.name }} Logo</div>
+            <span class="sr-only"> {{ supplier.name }} Logo</span>
           </div>
           <h3 class="supplier__name"> {{supplier.name}} </h3>
           <p class="supplier__code"> {{supplier.code}} </p>
-        </a>
+        </div>
       </ion-col>
     </ion-row>
 
