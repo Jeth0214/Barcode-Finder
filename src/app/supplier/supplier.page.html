@@ -3,42 +3,93 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/home"></ion-back-button>
     </ion-buttons>
-    <ion-title>GSK</ion-title>
+    <ion-title class="ion-text-center ion-no-padding">GSK</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-searchbar placeholder="Custom Placeholder"></ion-searchbar>
+  <ion-row>
+    <ion-col size="12" size-md="2"></ion-col>
+    <ion-col size="12" size-md="8">
+      <ion-searchbar placeholder="Search here"></ion-searchbar>
 
-  <ion-button class="ion-float-right ion-padding-end">
-    <ion-icon name="add-circle-outline"></ion-icon>
-    Add
-  </ion-button>
+      <ion-button class="">
+        <ion-icon name="add-circle-outline"></ion-icon>
+        Add
+      </ion-button>
 
-  <div class="ion-padding ion-no-margin">
-    <ion-list>
-      <ion-item-sliding>
-        <ion-item button detail="true" lines="full">
-          <ion-thumbnail slot="start">
-            <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
-          </ion-thumbnail>
-          <ion-label class="ion-no-margin">
-            <h3>Gt-123456</h3>
-            <p>01/10/23</p>
-          </ion-label>
-        </ion-item>
+      <div class="ion-no-padding ion-no-margin">
+        <ion-list>
+          <ion-item-sliding>
+            <ion-item button detail="true" lines="full" (click)="goToItemDetails('details soon')">
+              <ion-thumbnail slot="start">
+                <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
+              </ion-thumbnail>
+              <ion-label>
+                <h3 class="ion-margin-bottom">Gt-123456</h3>
+                <p>01/10/23</p>
+              </ion-label>
+            </ion-item>
 
-        <ion-item-options side="end">
-          <ion-item-option color="primary" (click)="onEdit()">
-            <ion-icon slot="icon-only" name="create-outline"></ion-icon>
-          </ion-item-option>
-          <ion-item-option color="danger" (click)="onDelete()">
-            <ion-icon slot="icon-only" name="trash"></ion-icon>
-          </ion-item-option>
-        </ion-item-options>
+            <ion-item-options side="end">
+              <ion-item-option color="primary" (click)="onEdit()">
+                <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+              </ion-item-option>
+              <ion-item-option color="danger" (click)="onDelete()">
+                <ion-icon slot="icon-only" name="trash"></ion-icon>
+              </ion-item-option>
+            </ion-item-options>
 
-      </ion-item-sliding>
-    </ion-list>
-  </div>
+          </ion-item-sliding>
+
+          <ion-item-sliding>
+            <ion-item button detail="true" lines="full">
+              <ion-thumbnail slot="start">
+                <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
+              </ion-thumbnail>
+              <ion-label>
+                <h3 class="ion-margin-bottom">Gt-123456</h3>
+                <p>01/10/23</p>
+              </ion-label>
+            </ion-item>
+
+            <ion-item-options side="end">
+              <ion-item-option color="primary" (click)="onEdit()">
+                <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+              </ion-item-option>
+              <ion-item-option color="danger" (click)="onDelete()">
+                <ion-icon slot="icon-only" name="trash"></ion-icon>
+              </ion-item-option>
+            </ion-item-options>
+
+          </ion-item-sliding>
+
+          <ion-item-sliding>
+            <ion-item button detail="true" lines="full">
+              <ion-thumbnail slot="start">
+                <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
+              </ion-thumbnail>
+              <ion-label>
+                <h3 class="ion-margin-bottom">Gt-123456</h3>
+                <p>01/10/23</p>
+              </ion-label>
+            </ion-item>
+
+            <ion-item-options side="end">
+              <ion-item-option color="primary" (click)="onEdit()">
+                <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+              </ion-item-option>
+              <ion-item-option color="danger" (click)="onDelete()">
+                <ion-icon slot="icon-only" name="trash"></ion-icon>
+              </ion-item-option>
+            </ion-item-options>
+
+          </ion-item-sliding>
+        </ion-list>
+      </div>
+    </ion-col>
+    <ion-col size="12" size-md="2"></ion-col>
+  </ion-row>
+
 
 </ion-content>

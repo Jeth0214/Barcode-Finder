@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, ParamMap, Router } from '@angular/router';
+import { NavController } from '@ionic/angular';
+import { Invoice } from '../models/invoice.model';
 
 @Component({
   selector: 'app-supplier',
@@ -8,7 +10,11 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 })
 export class SupplierPage implements OnInit {
   id: number = 1;
-  constructor(private activatedRoute: ActivatedRoute, private router: Router) { }
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+    private navController: NavController
+  ) { }
 
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe((param: ParamMap) => {
@@ -30,6 +36,43 @@ export class SupplierPage implements OnInit {
 
   onDelete() {
     console.log('Delete');
+  }
+
+  goToItemDetails(item: any) {
+    let invoice: Invoice = {
+      id: this.id,
+      number: 456789,
+      items: [
+        {
+          id: 1,
+          gt: 12345,
+          lot: 'm38s',
+          qty: 15000
+        },
+        {
+          id: 2,
+          gt: 12345,
+          lot: 'KN4S',
+          qty: 1000
+        },
+        {
+          id: 3,
+          gt: 12345,
+          lot: 'HF3F',
+          qty: 5000
+        }
+      ],
+      brand: '74',
+      barcode: 'soon.jpg'
+
+    }
+    let navigationExtras: NavigationExtras = {
+      state: {
+        invoice: invoice,
+      }
+    }
+    console.log('Go to items:', invoice);
+    this.router.navigate([`supplier/${this.id}/item-details`], navigationExtras)
   }
 
 }
