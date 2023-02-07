@@ -11,7 +11,11 @@ const routes: Routes = [
   {
     path: 'transfer/:id',
     loadChildren: () => import('./transfer/transfer.module').then(m => m.TransferPageModule)
+  },  {
+    path: 'add-edit-transfer',
+    loadChildren: () => import('./add-edit-transfer/add-edit-transfer.module').then( m => m.AddEditTransferPageModule)
   }
+
 
 ];
 

@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title class="ion-text-center">{{ initialTransferData.action }} Transfer </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="transferForm" (ngSubmit)="onSubmit()">
+    <div class="ion-padding ion-margin-top">
+      <ion-item fill="outline">
+        <ion-label position="floating"> Gt: </ion-label>
+        <ion-input formControlName="gt"></ion-input>
+        <ion-note slot="error" *ngIf="!transferForm.controls['gt'].valid && transferForm.controls['gt'].touched">
+          Please provide a departure destination.
+        </ion-note>
+      </ion-item>
+      <!-- <p>
+  
+        <ion-text color="danger" class="my-5">
+          {{ errorMessage }}
+        </ion-text>
+      </p> -->
+
+      <ion-button type="submit" size="large" color="success" expand="block" fill="solid" strong="true"
+        [disabled]="!transferForm.valid"> Add
+      </ion-button>
+    </div>
+  </form>
+</ion-content>

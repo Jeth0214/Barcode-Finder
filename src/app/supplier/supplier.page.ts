@@ -10,6 +10,35 @@ import { Transfer } from '../models/transfer.model';
 })
 export class SupplierPage implements OnInit {
   id: number = 1;
+  transfer: Transfer = {
+    id: this.id,
+    number: 456789,
+    items: [
+      {
+        id: 1,
+        gt: 12345,
+        lot: 'm38s',
+        qty: 15000
+      },
+      {
+        id: 2,
+        gt: 12345,
+        lot: 'KN4S',
+        qty: 1000
+      },
+      {
+        id: 3,
+        gt: 12345,
+        lot: 'HF3F',
+        qty: 5000
+      }
+    ],
+    barcode: 'soon.jpg',
+    date: new Date(),
+    supplier_id: 1,
+    brand: '74'
+
+  }
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -25,8 +54,6 @@ export class SupplierPage implements OnInit {
         return;
       }
       this.id = id;
-      console.log(this.id);
-
     })
   }
 
@@ -39,36 +66,8 @@ export class SupplierPage implements OnInit {
     console.log('Delete');
   }
 
-  goToItemDetails(item: any) {
-    let transfer: Transfer = {
-      id: this.id,
-      number: 456789,
-      items: [
-        {
-          id: 1,
-          gt: 12345,
-          lot: 'm38s',
-          qty: 15000
-        },
-        {
-          id: 2,
-          gt: 12345,
-          lot: 'KN4S',
-          qty: 1000
-        },
-        {
-          id: 3,
-          gt: 12345,
-          lot: 'HF3F',
-          qty: 5000
-        }
-      ],
-      brand: '74',
-      barcode: 'soon.jpg',
-      date: new Date(),
-      supplier_id: 1
+  goToItemDetails(transfer: Transfer) {
 
-    }
     let navigationExtras: NavigationExtras = {
       state: {
         transfer: transfer,
@@ -80,7 +79,17 @@ export class SupplierPage implements OnInit {
 
   onAdd() {
     console.log('Add item');
-
+    let initialTransferData = {
+      brand: this.transfer.brand,
+      supplier_id: this.id,
+      action: 'Add',
+    };
+    let navigationExtras: NavigationExtras = {
+      state: {
+        initialTransferData: initialTransferData
+      }
+    }
+    this.router.navigate([`supplier/${this.id}/add-edit-transfer`], navigationExtras)
   }
 
 }
