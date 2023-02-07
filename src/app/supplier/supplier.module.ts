@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { SupplierPageRoutingModule } from './supplier-routing.module';
 
 import { SupplierPage } from './supplier.page';
+import { TransferPageModule } from './transfer/transfer.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    SupplierPageRoutingModule
+    SupplierPageRoutingModule,
+    TransferPageModule
   ],
   declarations: [SupplierPage]
 })
