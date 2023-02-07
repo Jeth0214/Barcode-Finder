@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { ItemDetailsPage } from './item-details/item-details.page';
 
 import { SupplierPage } from './supplier.page';
 
@@ -10,10 +9,10 @@ const routes: Routes = [
     component: SupplierPage
   },
   {
-    path: 'item-details',
-    component: ItemDetailsPage,
-    loadChildren: () => import('./item-details/item-details.module').then(m => m.ItemDetailsPageModule)
+    path: 'transfer/:id',
+    loadChildren: () => import('./transfer/transfer.module').then(m => m.TransferPageModule)
   }
+
 ];
 
 @NgModule({

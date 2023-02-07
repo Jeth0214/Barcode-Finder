@@ -15,6 +15,7 @@ const routes: Routes = [
     path: 'supplier/:id',
     loadChildren: () => import('./supplier/supplier.module').then(m => m.SupplierPageModule)
   }
+
 ];
 
 @NgModule({

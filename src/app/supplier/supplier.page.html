@@ -7,16 +7,17 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <ion-row>
+<ion-content class="ion-padding">
+  <ion-fab slot="fixed" vertical="top" horizontal="end" [edge]="true" (click)="onAdd()">
+    <ion-fab-button>
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+    <span class="sr-only">Add button</span>
+  </ion-fab>
+  <ion-row class="ion-margin-top">
     <ion-col size="12" size-md="2"></ion-col>
     <ion-col size="12" size-md="8">
       <ion-searchbar placeholder="Search here"></ion-searchbar>
-
-      <ion-button class="">
-        <ion-icon name="add-circle-outline"></ion-icon>
-        Add
-      </ion-button>
 
       <div class="ion-no-padding ion-no-margin">
         <ion-list>

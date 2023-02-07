@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, ParamMap, Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
-import { Invoice } from '../models/invoice.model';
+import { Transfer } from '../models/transfer.model';
 
 @Component({
   selector: 'app-supplier',
@@ -10,6 +10,7 @@ import { Invoice } from '../models/invoice.model';
 })
 export class SupplierPage implements OnInit {
   id: number = 1;
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -39,7 +40,7 @@ export class SupplierPage implements OnInit {
   }
 
   goToItemDetails(item: any) {
-    let invoice: Invoice = {
+    let transfer: Transfer = {
       id: this.id,
       number: 456789,
       items: [
@@ -63,16 +64,23 @@ export class SupplierPage implements OnInit {
         }
       ],
       brand: '74',
-      barcode: 'soon.jpg'
+      barcode: 'soon.jpg',
+      date: new Date(),
+      supplier_id: 1
 
     }
     let navigationExtras: NavigationExtras = {
       state: {
-        invoice: invoice,
+        transfer: transfer,
       }
     }
-    console.log('Go to items:', invoice);
-    this.router.navigate([`supplier/${this.id}/item-details`], navigationExtras)
+    // console.log('Go to items:', transfer);
+    this.router.navigate([`supplier/${this.id}/transfer/${transfer.number}`], navigationExtras)
+  }
+
+  onAdd() {
+    console.log('Add item');
+
   }
 
 }
