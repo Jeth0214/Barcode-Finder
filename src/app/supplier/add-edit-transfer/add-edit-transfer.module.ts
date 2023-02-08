@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { AddEditTransferPageRoutingModule } from './add-edit-transfer-routing.module';
 
 import { AddEditTransferPage } from './add-edit-transfer.page';
+import { ComponentsModule } from 'src/app/components/components.module';
 
 @NgModule({
   imports: [
@@ -14,7 +15,8 @@ import { AddEditTransferPage } from './add-edit-transfer.page';
     FormsModule,
     IonicModule,
     AddEditTransferPageRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ComponentsModule
   ],
   declarations: [AddEditTransferPage]
 })

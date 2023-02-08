@@ -7,23 +7,94 @@
 <ion-content>
   <form [formGroup]="transferForm" (ngSubmit)="onSubmit()">
     <div class="ion-padding ion-margin-top">
+      <!-- Gt form Control -->
       <ion-item fill="outline">
         <ion-label position="floating"> Gt: </ion-label>
-        <ion-input formControlName="gt"></ion-input>
+        <ion-input type="number" formControlName="gt" color="primary"></ion-input>
         <ion-note slot="error" *ngIf="!transferForm.controls['gt'].valid && transferForm.controls['gt'].touched">
-          Please provide a departure destination.
+          <ion-icon name="alert-circle-outline" color="danger"></ion-icon>
+
+          <span *ngIf="transferForm.controls['gt']?.errors?.['required']"> Please provide the Gt transfer number.
+          </span>
+          <span *ngIf="transferForm.controls['gt']?.errors?.['pattern']"> Gt must be whole number. </span>
         </ion-note>
       </ion-item>
-      <!-- <p>
-  
-        <ion-text color="danger" class="my-5">
-          {{ errorMessage }}
-        </ion-text>
-      </p> -->
 
-      <ion-button type="submit" size="large" color="success" expand="block" fill="solid" strong="true"
-        [disabled]="!transferForm.valid"> Add
-      </ion-button>
+      <!-- Items form Control -->
+      <h2>ITEMS:</h2>
+      <ion-row class="ion-justify-content-between">
+        <ion-col size="4">
+          <h4 class="ion-no-margin">Lot</h4>
+        </ion-col>
+        <ion-col size=" 4">
+          <h4 class="ion-no-margin">Qty</h4>
+        </ion-col>
+        <ion-col size="2">
+
+        </ion-col>
+      </ion-row>
+      <ng-container formArrayName="items">
+        <div *ngFor="let item of items.controls; index as i" [formGroupName]="i">
+          <ion-row class="ion-justify-content-between ion-align-items-center">
+            <ion-col size="4">
+              <ion-item fill="outline">
+                <ion-input formControlName="lot" color="primary"></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col size=" 4">
+              <ion-item fill="outline">
+                <ion-input type="number" formControlName="qty" color="primary"></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col size="2">
+              <ion-button type="button" color="danger" fill="solid" (click)="removeItem(i)">
+                <ion-icon name="trash" size="large" slot="icon-only" class="ion-padding-vertical"></ion-icon>
+              </ion-button>
+            </ion-col>
+          </ion-row>
+          <ion-note slot="error" *ngIf="item.get('lot')?.errors && item.get('lot').touched" color="danger"
+            class="ion-margin-vertical">
+            <ion-icon name="alert-circle-outline" color="danger" size="medium"></ion-icon>
+            <span> Please provide the lot id. </span>
+          </ion-note>
+          <ion-note slot="error" *ngIf="item.get('qty')?.errors && item.get('qty').touched" color="danger"
+            class="ion-margin-vertical">
+            <ion-icon name="alert-circle-outline" color="danger" size="medium"></ion-icon>
+            <span *ngIf="item.get('qty')?.errors?.['required']"> Please provide the quantity. </span>
+            <span *ngIf="item.get('qty')?.errors?.['pattern']"> Quantity must whole number. </span>
+          </ion-note>
+        </div>
+
+        <ion-note slot="error" *ngIf="itemsErrorMessage" color="danger" class="ion-margin-vertical">
+          <ion-icon name="alert-circle-outline" color="danger" size="medium"></ion-icon>
+          <span> {{ itemsErrorMessage}}. </span>
+        </ion-note>
+
+
+        <ion-button type="button" color="dark" shape="round" expand="block" fill="solid" class="ion-margin-vertical"
+          (click)="addItem()">
+          <ion-icon name="add-circle-outline" size="medium"></ion-icon> Add item
+        </ion-button>
+      </ng-container>
+
+
+      <app-upload-barcode></app-upload-barcode>
+
+      <!-- Actions buttons -->
+      <ion-row class="ion-justify-content-between">
+        <ion-col size="4">
+          <ion-button type="button" color="light" fill="solid" strong="true" shape="round" (click)="onCancel()">
+            Cancel
+          </ion-button>
+        </ion-col>
+        <ion-col size="4">
+
+          <ion-button type="submit" color="primary" fill="solid" strong="true" shape="round"
+            [disabled]="!transferForm.valid">
+            Save
+          </ion-button>
+        </ion-col>
+      </ion-row>
     </div>
   </form>
 </ion-content>
