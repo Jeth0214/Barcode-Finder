@@ -1,23 +1,26 @@
 <ion-content [fullscreen]="true" class="ion-padding ion-margin-vertical">
-  <div class="barcode container ">
-    <img src="../../assets/images/home/barcode .gif" alt="barcode">
-  </div>
+  <div class="container">
 
-  <div class="suppliers ion-margin-top">
-    <!-- GSK ans Aspen -->
-    <ion-row class="ion-justify-content-between ion-margin-top">
-      <ion-col *ngFor="let supplier of suppliers" size="5" class="supplier ion-margin-bottom"
-        [ngClass]="'supplier--' + supplier.name" routerLink="/supplier/{{supplier.id}}">
-        <div class="supplier__link">
-          <div class="supplier__image">
-            <img [src]="'../../assets/images/home/' + supplier.image +'-solid.svg'" alt="" aria-hidden="true">
-            <span class="sr-only"> {{ supplier.name }} Logo</span>
+    <div class="barcode">
+      <img src="../../assets/images/home/barcode .gif" alt="barcode">
+    </div>
+
+    <div class="suppliers ion-margin-top">
+      <!-- GSK ans Aspen -->
+      <ion-row class="ion-justify-content-between ion-margin-top">
+        <ion-col *ngFor="let supplier of suppliers" size="5" class="supplier ion-margin-bottom"
+          [ngClass]="'supplier--' + supplier.name" routerLink="/supplier/{{supplier.id}}">
+          <div class="supplier__link">
+            <div class="supplier__image">
+              <img [src]="'../../assets/images/home/' + supplier.image +'-solid.svg'" alt="" aria-hidden="true">
+              <span class="sr-only"> {{ supplier.name }} Logo</span>
+            </div>
+            <h3 class="supplier__name"> {{supplier.name}} </h3>
+            <p class="supplier__code"> {{supplier.code}} </p>
           </div>
-          <h3 class="supplier__name"> {{supplier.name}} </h3>
-          <p class="supplier__code"> {{supplier.code}} </p>
-        </div>
-      </ion-col>
-    </ion-row>
+        </ion-col>
+      </ion-row>
+    </div>
 
   </div>
 
