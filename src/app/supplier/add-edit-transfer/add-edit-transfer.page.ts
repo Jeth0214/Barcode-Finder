@@ -12,6 +12,7 @@ export class AddEditTransferPage implements OnInit {
   initialTransferData: any = {};
   transferForm: FormGroup;
   itemsErrorMessage: string = '';
+  isSaving: boolean = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -53,25 +54,35 @@ export class AddEditTransferPage implements OnInit {
   }
 
   removeItem(index: number) {
-    if (this.items.length < 1) {
-      this.itemsErrorMessage = 'Please add at least one item';
+    if (this.items.length <= 1) {
+      this.itemsErrorMessage = 'Please provide at least one item';
       return;
     }
     this.items.removeAt(index);
   }
 
+  saveImage(e: Event) {
+    console.log(e);
+  }
+
   onCancel() {
     console.log('Cancel');
+    this.reset();
   }
 
   onSubmit() {
     console.log('submit', this.transferForm.value);
-
+    this.isSaving = true;
+    //TODO: send data to server 
+    setTimeout(() => { this.reset() }, 2000);
   }
 
   reset() {
     this.transferForm.reset();
+    this.items.clear();
+    this.addItem();
     this.itemsErrorMessage = '';
+    this.isSaving = false;
   }
 
 }

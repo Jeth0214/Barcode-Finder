@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-upload-barcode',
@@ -6,9 +6,17 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./upload-barcode.component.scss'],
 })
 export class UploadBarcodeComponent implements OnInit {
+  @Output() image = new EventEmitter();
 
   constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() { }
+
+  captureImage() {
+    console.log('capturing image');
+
+    this.image.emit('captureImage');
+
+  }
 
 }

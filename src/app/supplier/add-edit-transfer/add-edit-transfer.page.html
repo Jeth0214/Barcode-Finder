@@ -80,19 +80,20 @@
         </ng-container>
 
 
-        <app-upload-barcode></app-upload-barcode>
+        <app-upload-barcode (captureImage)="saveImage($event)"></app-upload-barcode>
 
         <!-- Actions buttons -->
         <ion-row class="ion-justify-content-between">
           <ion-col size="4">
-            <ion-button type="button" color="light" fill="solid" strong="true" shape="round" (click)="onCancel()">
+            <ion-button type="button" color="light" fill="solid" strong="true" shape="round" [disabled]="isSaving"
+              (click)="onCancel()">
               Cancel
             </ion-button>
           </ion-col>
-          <ion-col size="4">
+          <ion-col size="4" class="ion-align-self-end">
 
             <ion-button type="submit" color="primary" fill="solid" strong="true" shape="round"
-              [disabled]="!transferForm.valid">
+              [disabled]="!transferForm.valid && !isSaving">
               Save
             </ion-button>
           </ion-col>
