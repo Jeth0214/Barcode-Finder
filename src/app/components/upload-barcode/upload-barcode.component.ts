@@ -1,4 +1,8 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+import { Camera, CameraResultType, CameraSource, Photo } from "@capacitor/camera";
+import { Filesystem, Directory } from '@capacitor/filesystem';
+import { Preferences } from '@capacitor/preferences';
 
 @Component({
   selector: 'app-upload-barcode',
@@ -6,17 +10,21 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
   styleUrls: ['./upload-barcode.component.scss'],
 })
 export class UploadBarcodeComponent implements OnInit {
-  @Output() image = new EventEmitter();
+  @Output() capturedBarcode = new EventEmitter();
+  barcodeSource: string = 'https://ionicframework.com/docs/img/demos/card-media.png';
 
-  constructor() { }
+  constructor(public domSrv: DomSanitizer) { }
 
   ngOnInit() { }
 
-  captureImage() {
-    console.log('capturing image');
+  async captureBarcode() {
+    const barcode = await Camera.getPhoto({
+      resultType: CameraResultType.Uri,
+      source: CameraSource.Camera,
+      quality: 100
+    });
 
-    this.image.emit('captureImage');
-
+    this.barcodeSource = barcode.webPath;
+    this.capturedBarcode.emit(barcode);
   }
-
 }

@@ -61,8 +61,8 @@ export class AddEditTransferPage implements OnInit {
     this.items.removeAt(index);
   }
 
-  saveImage(e: Event) {
-    console.log(e);
+  saveBarcode(e: Event) {
+    console.log('saveImage', e);
   }
 
   onCancel() {
