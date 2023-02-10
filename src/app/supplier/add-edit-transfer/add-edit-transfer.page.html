@@ -7,6 +7,9 @@
 <ion-content>
   <div class="container">
 
+    <app-upload-barcode (capturedBarcode)="saveBarcode($event)"></app-upload-barcode>
+
+
     <form [formGroup]="transferForm" (ngSubmit)="onSubmit()">
       <div class="ion-padding ion-margin-top">
         <!-- Gt form Control -->
@@ -80,7 +83,6 @@
         </ng-container>
 
 
-        <app-upload-barcode (captureImage)="saveImage($event)"></app-upload-barcode>
 
         <!-- Actions buttons -->
         <ion-row class="ion-justify-content-between">
