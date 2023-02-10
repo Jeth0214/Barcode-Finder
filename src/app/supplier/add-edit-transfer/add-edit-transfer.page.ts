@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Photo } from '@capacitor/camera';
+import { AlertController, LoadingController } from '@ionic/angular';
 import { Transfer } from 'src/app/models/transfer.model';
+import { BarcodeService } from "../../services/barcode.service";
 
 @Component({
   selector: 'app-add-edit-transfer',
@@ -13,11 +16,16 @@ export class AddEditTransferPage implements OnInit {
   transferForm: FormGroup;
   itemsErrorMessage: string = '';
   isSaving: boolean = false;
+  showBarcodeMessage: string = '';
+  barcodeImage: Photo = undefined;
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private barcodeService: BarcodeService,
+    private alertController: AlertController,
+    private loadingController: LoadingController
   ) {
     this.activatedRoute.queryParams.subscribe(params => {
       if (this.router.getCurrentNavigation().extras.state) {
@@ -29,10 +37,11 @@ export class AddEditTransferPage implements OnInit {
 
   ngOnInit() {
     this.transferForm = this.formBuilder.group({
-      gt: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
+      gt: [
+        '', [Validators.required, Validators.pattern('^[0-9]{5,5}$')]],
       items: new FormArray([
         new FormGroup({
-          lot: new FormControl('', Validators.required),
+          lot: new FormControl('', [Validators.required, Validators.minLength(4)]),
           qty: new FormControl('', [Validators.required, Validators.pattern("^[0-9]*$")])
         })
       ])
@@ -46,7 +55,7 @@ export class AddEditTransferPage implements OnInit {
   addItem() {
     this.itemsErrorMessage = '';
     const itemsGroup = new FormGroup({
-      lot: new FormControl('', Validators.required),
+      lot: new FormControl('', [Validators.required, Validators.minLength(4)]),
       qty: new FormControl('', [Validators.required, Validators.pattern("^[0-9]*$")])
     });
 
@@ -61,20 +70,67 @@ export class AddEditTransferPage implements OnInit {
     this.items.removeAt(index);
   }
 
-  saveBarcode(e: Event) {
-    console.log('saveImage', e);
+  barcodeToSave(photo: Photo) {
+    this.showBarcodeMessage = '';
+    this.barcodeImage = photo;
   }
 
-  onCancel() {
-    console.log('Cancel');
-    this.reset();
+  async onCancel() {
+    const alert = await this.alertController.create({
+      header: 'Warning',
+      message: 'Are you sure you want to cancel?',
+      buttons: [
+        {
+          text: 'Yes',
+          role: 'confirm',
+          handler: () => {
+            this.reset();
+            this.router.navigate([`/supplier/${this.initialTransferData.supplier_id}`]);
+          }
+        },
+        {
+          text: 'No',
+          role: 'cancel',
+          handler: () => { }
+        }
+
+      ]
+    });
+
+    await alert.present();
+
   }
 
-  onSubmit() {
-    console.log('submit', this.transferForm.value);
+
+  async onSubmit() {
+    if (!this.barcodeImage) {
+      this.showBarcodeMessage = 'Please capture the barcode image';
+      return;
+    }
     this.isSaving = true;
+    const loading = await this.loadingController.create({
+      message: 'Saving...',
+      spinner: 'circles',
+    })
+
+    loading.present();
+
+    let data = {
+      barcode: this.barcodeImage.webPath,
+      brand: this.initialTransferData.brand,
+      supplier_id: this.initialTransferData.supplier_id,
+      ...this.transferForm.value
+    }
+
+    // TODO: Save the barcode image
+
+    console.log('submit', data);
     //TODO: send data to server 
-    setTimeout(() => { this.reset() }, 2000);
+    setTimeout(async () => {
+      this.reset(),
+        loading.dismiss()
+    }, 2000);
+
   }
 
   reset() {
@@ -82,7 +138,10 @@ export class AddEditTransferPage implements OnInit {
     this.items.clear();
     this.addItem();
     this.itemsErrorMessage = '';
+    this.showBarcodeMessage = '';
     this.isSaving = false;
   }
+
+
 
 }

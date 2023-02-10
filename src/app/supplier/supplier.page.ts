@@ -12,7 +12,7 @@ export class SupplierPage implements OnInit {
   id: number = 1;
   transfer: Transfer = {
     id: this.id,
-    number: 456789,
+    gt: 456789,
     items: [
       {
         id: 1,
@@ -74,7 +74,7 @@ export class SupplierPage implements OnInit {
       }
     }
     // console.log('Go to items:', transfer);
-    this.router.navigate([`supplier/${this.id}/transfer/${transfer.number}`], navigationExtras)
+    this.router.navigate([`supplier/${this.id}/transfer/${transfer.gt}`], navigationExtras)
   }
 
   onAdd() {
