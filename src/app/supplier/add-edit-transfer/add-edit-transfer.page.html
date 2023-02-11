@@ -7,7 +7,7 @@
 <ion-content>
   <div class="container">
 
-    <app-upload-barcode (capturedBarcode)="saveBarcode($event)"></app-upload-barcode>
+    <app-upload-barcode (capturedBarcode)="barcodeToSave($event)"></app-upload-barcode>
 
 
     <form [formGroup]="transferForm" (ngSubmit)="onSubmit()">
@@ -21,7 +21,7 @@
 
             <span *ngIf="transferForm.controls['gt']?.errors?.['required']"> Please provide the Gt transfer number.
             </span>
-            <span *ngIf="transferForm.controls['gt']?.errors?.['pattern']"> Gt must be whole number. </span>
+            <span *ngIf="transferForm.controls['gt']?.errors?.['pattern']"> Gt must 5 be integer. </span>
           </ion-note>
         </ion-item>
 
@@ -60,7 +60,8 @@
             <ion-note slot="error" *ngIf="item.get('lot')?.errors && item.get('lot').touched" color="danger"
               class="ion-margin-vertical">
               <ion-icon name="alert-circle-outline" color="danger" size="medium"></ion-icon>
-              <span> Please provide the lot id. </span>
+              <span *ngIf="item.get('lot')?.errors?.['required']"> Please provide the Lot. </span>
+              <span *ngIf="item.get('lot')?.errors?.['minlength']"> Lot must at least 4 characters. </span>
             </ion-note>
             <ion-note slot="error" *ngIf="item.get('qty')?.errors && item.get('qty').touched" color="danger"
               class="ion-margin-vertical">
@@ -70,11 +71,6 @@
             </ion-note>
           </div>
 
-          <ion-note slot="error" *ngIf="itemsErrorMessage" color="danger" class="ion-margin-vertical">
-            <ion-icon name="alert-circle-outline" color="danger" size="medium"></ion-icon>
-            <span> {{ itemsErrorMessage}}. </span>
-          </ion-note>
-
 
           <ion-button type="button" color="dark" shape="round" expand="block" fill="solid" class="ion-margin-vertical"
             (click)="addItem()">
@@ -82,7 +78,11 @@
           </ion-button>
         </ng-container>
 
-
+        <!-- Barcode message -->
+        <ion-note slot="error" *ngIf="showBarcodeMessage" color="danger" class="ion-margin-vertical">
+          <ion-icon name="alert-circle-outline" color="danger" size="medium"></ion-icon>
+          <span> {{ showBarcodeMessage }} </span>
+        </ion-note>
 
         <!-- Actions buttons -->
         <ion-row class="ion-justify-content-between">
