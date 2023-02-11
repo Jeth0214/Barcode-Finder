@@ -115,21 +115,24 @@ export class AddEditTransferPage implements OnInit {
 
     loading.present();
 
+    let barcode = await this.barcodeService.saveBarcodeImage(this.barcodeImage);
     let data = {
-      barcode: this.barcodeImage.webPath,
+      barcode: barcode,
       brand: this.initialTransferData.brand,
       supplier_id: this.initialTransferData.supplier_id,
       ...this.transferForm.value
     }
 
     // TODO: Save the barcode image
-
     console.log('submit', data);
     //TODO: send data to server 
     setTimeout(async () => {
       this.reset(),
-        loading.dismiss()
+        loading.dismiss();
     }, 2000);
+    setTimeout(async () => {
+      this.alertSavingResult('Success', 'Would you like to add  new transfer?')
+    }, 4000);
 
   }
 
@@ -140,6 +143,30 @@ export class AddEditTransferPage implements OnInit {
     this.itemsErrorMessage = '';
     this.showBarcodeMessage = '';
     this.isSaving = false;
+  }
+
+  async alertSavingResult(result: string, resultMessage: string) {
+    const alert = await this.alertController.create({
+      header: 'result',
+      message: resultMessage,
+      buttons: [
+        {
+          text: 'No',
+          role: 'confirm',
+          handler: () => {
+            this.reset();
+            this.router.navigate([`/supplier/${this.initialTransferData.supplier_id}`]);
+          }
+        },
+        {
+          text: 'Yes',
+          role: 'cancel',
+          handler: () => { }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 
 

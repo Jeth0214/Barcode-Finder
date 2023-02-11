@@ -33,7 +33,7 @@ export class SupplierPage implements OnInit {
         qty: 5000
       }
     ],
-    barcode: 'soon.jpg',
+    barcode: '1676089338142.jpeg',
     date: new Date(),
     supplier_id: 1,
     brand: '74'
