@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { LocalFile } from 'src/app/models/local-file.model';
 import { Transfer } from 'src/app/models/transfer.model';
+import { BarcodeService } from 'src/app/services/barcode.service';
 
 @Component({
   selector: 'app-transfer',
@@ -10,10 +12,15 @@ import { Transfer } from 'src/app/models/transfer.model';
 export class TransferPage implements OnInit {
   transfer: Transfer;
   id: number;
+  sourceImage;
 
-  constructor(private activatedRoute: ActivatedRoute, private router: Router) { }
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+    private barcodeService: BarcodeService
+  ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.activatedRoute.queryParams.subscribe(params => {
       this.id = +params['id'];
       if (this.router.getCurrentNavigation().extras.state) {
@@ -21,6 +28,13 @@ export class TransferPage implements OnInit {
         console.log('details from supplier:', this.transfer);
       }
     })
+    this.sourceImage = await this.barcodeService.loadImageBase64Data(this.transfer.barcode);
+  }
+
+
+
+  async getImageFromLocalFile() {
+
   }
 
 }

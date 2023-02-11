@@ -22,7 +22,6 @@ export class UploadBarcodeComponent implements OnInit {
       source: CameraSource.Camera,
       quality: 100
     });
-
     this.barcodeSource = barcode.webPath;
     this.capturedBarcode.emit(barcode);
   }
