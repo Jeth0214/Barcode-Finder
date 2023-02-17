@@ -3,91 +3,175 @@
     <ion-buttons slot="start" class="position-absolute">
       <ion-back-button defaultHref="/home"></ion-back-button>
     </ion-buttons>
-    <ion-title class="ion-text-center ion-no-padding">GSK</ion-title>
+    <ion-title class="ion-text-center ion-no-padding ion-text-uppercase">
+      <span *ngIf="isloading"> <ion-spinner name="lines" class="ion-margin-end"></ion-spinner> Loading
+        Transfers...</span>
+      <span *ngIf="!isloading">{{ supplier?.name }}</span>
+    </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding-horizontal">
-  <ion-fab slot="fixed" vertical="top" horizontal="end" [edge]="true" (click)="onAdd()">
-    <ion-fab-button type="button">
-      <ion-icon name="add"></ion-icon>
-    </ion-fab-button>
-    <span class="sr-only">Add button</span>
-  </ion-fab>
+  <ng-container *ngIf="!isloading">
+    <ion-fab slot="fixed" vertical="top" horizontal="end" [edge]="true" (click)="onAdd()">
+      <ion-fab-button type="button">
+        <ion-icon name="add"></ion-icon>
+      </ion-fab-button>
+      <span class="sr-only">Add button</span>
+    </ion-fab>
+  </ng-container>
   <ion-row class="ion-margin-top">
     <ion-col size="12" size-md="2"></ion-col>
     <ion-col size="12" size-md="8">
-      <ion-searchbar placeholder="Search barcode here"></ion-searchbar>
+      <ion-searchbar *ngIf="!isloading &&  transfers?.length > 0" placeholder="Search barcode here"></ion-searchbar>
 
-      <div class="ion-no-padding ion-no-margin">
+      <ng-container *ngIf="!isloading else skeleton">
+
+        <div class="ion-no-padding ion-no-margin">
+          <ng-container *ngIf="transfers.length > 0 else noTransfer">
+            <ion-list>
+              <ng-container *ngFor="let transfer of transfers">
+                <ion-item-sliding>
+                  <ion-item button detail="true" lines="full" (click)="goToItemDetails(transfer)">
+                    <ion-thumbnail slot="start">
+                      <img alt="Silhouette of mountains"
+                        src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
+                    </ion-thumbnail>
+                    <ion-label>
+                      <h3 class="ion-margin-bottom">GT-{{transfer?.gt}}</h3>
+                      <p>{{transfer?.created_at | date:'shortDate':'dd/MM/YYYY' }}</p>
+                    </ion-label>
+                  </ion-item>
+
+                  <ion-item-options side="end">
+                    <ion-item-option color="primary" (click)="onEdit()">
+                      <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+                    </ion-item-option>
+                    <ion-item-option color="danger" (click)="onDelete()">
+                      <ion-icon slot="icon-only" name="trash"></ion-icon>
+                    </ion-item-option>
+                  </ion-item-options>
+
+                </ion-item-sliding>
+              </ng-container>
+            </ion-list>
+          </ng-container>
+          <ng-template #noTransfer>
+            <div class="container ">
+              <ion-img class="ion-margin-top" src="../assets/images/sorry-item-not-found.png"
+                alt="no found item"></ion-img>
+              <h3 class="ion-text-center">No Transfer Yet. Add new one.</h3>
+            </div>
+
+          </ng-template>
+        </div>
+      </ng-container>
+
+      <!-- Skeleton section -->
+      <ng-template #skeleton>
         <ion-list>
-          <ion-item-sliding>
-            <ion-item button detail="true" lines="full" (click)="goToItemDetails(transfer)">
-              <ion-thumbnail slot="start">
-                <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
-              </ion-thumbnail>
-              <ion-label>
-                <h3 class="ion-margin-bottom">Gt-123456</h3>
-                <p>01/10/23</p>
-              </ion-label>
-            </ion-item>
-
-            <ion-item-options side="end">
-              <ion-item-option color="primary" (click)="onEdit()">
-                <ion-icon slot="icon-only" name="create-outline"></ion-icon>
-              </ion-item-option>
-              <ion-item-option color="danger" (click)="onDelete()">
-                <ion-icon slot="icon-only" name="trash"></ion-icon>
-              </ion-item-option>
-            </ion-item-options>
-
-          </ion-item-sliding>
-
-          <ion-item-sliding>
-            <ion-item button detail="true" lines="full">
-              <ion-thumbnail slot="start">
-                <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
-              </ion-thumbnail>
-              <ion-label>
-                <h3 class="ion-margin-bottom">Gt-123456</h3>
-                <p>01/10/23</p>
-              </ion-label>
-            </ion-item>
-
-            <ion-item-options side="end">
-              <ion-item-option color="primary" (click)="onEdit()">
-                <ion-icon slot="icon-only" name="create-outline"></ion-icon>
-              </ion-item-option>
-              <ion-item-option color="danger" (click)="onDelete()">
-                <ion-icon slot="icon-only" name="trash"></ion-icon>
-              </ion-item-option>
-            </ion-item-options>
-
-          </ion-item-sliding>
-
-          <ion-item-sliding>
-            <ion-item button detail="true" lines="full">
-              <ion-thumbnail slot="start">
-                <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
-              </ion-thumbnail>
-              <ion-label>
-                <h3 class="ion-margin-bottom">Gt-123456</h3>
-                <p>01/10/23</p>
-              </ion-label>
-            </ion-item>
-
-            <ion-item-options side="end">
-              <ion-item-option color="primary" (click)="onEdit()">
-                <ion-icon slot="icon-only" name="create-outline"></ion-icon>
-              </ion-item-option>
-              <ion-item-option color="danger" (click)="onDelete()">
-                <ion-icon slot="icon-only" name="trash"></ion-icon>
-              </ion-item-option>
-            </ion-item-options>
-
-          </ion-item-sliding>
+          <ion-list-header>
+            <ion-skeleton-text [animated]="true" style="width: 80px"></ion-skeleton-text>
+          </ion-list-header>
+          <ion-item>
+            <ion-thumbnail slot="start">
+              <ion-skeleton-text [animated]="true"></ion-skeleton-text>
+            </ion-thumbnail>
+            <ion-label>
+              <h3>
+                <ion-skeleton-text [animated]="true" style="width: 80%;"></ion-skeleton-text>
+              </h3>
+              <p>
+                <ion-skeleton-text [animated]="true" style="width: 60%;"></ion-skeleton-text>
+              </p>
+              <p>
+                <ion-skeleton-text [animated]="true" style="width: 30%;"></ion-skeleton-text>
+              </p>
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-thumbnail slot="start">
+              <ion-skeleton-text [animated]="true"></ion-skeleton-text>
+            </ion-thumbnail>
+            <ion-label>
+              <h3>
+                <ion-skeleton-text [animated]="true" style="width: 80%;"></ion-skeleton-text>
+              </h3>
+              <p>
+                <ion-skeleton-text [animated]="true" style="width: 60%;"></ion-skeleton-text>
+              </p>
+              <p>
+                <ion-skeleton-text [animated]="true" style="width: 30%;"></ion-skeleton-text>
+              </p>
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-thumbnail slot="start">
+              <ion-skeleton-text [animated]="true"></ion-skeleton-text>
+            </ion-thumbnail>
+            <ion-label>
+              <h3>
+                <ion-skeleton-text [animated]="true" style="width: 80%;"></ion-skeleton-text>
+              </h3>
+              <p>
+                <ion-skeleton-text [animated]="true" style="width: 60%;"></ion-skeleton-text>
+              </p>
+              <p>
+                <ion-skeleton-text [animated]="true" style="width: 30%;"></ion-skeleton-text>
+              </p>
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-thumbnail slot="start">
+              <ion-skeleton-text [animated]="true"></ion-skeleton-text>
+            </ion-thumbnail>
+            <ion-label>
+              <h3>
+                <ion-skeleton-text [animated]="true" style="width: 80%;"></ion-skeleton-text>
+              </h3>
+              <p>
+                <ion-skeleton-text [animated]="true" style="width: 60%;"></ion-skeleton-text>
+              </p>
+              <p>
+                <ion-skeleton-text [animated]="true" style="width: 30%;"></ion-skeleton-text>
+              </p>
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-thumbnail slot="start">
+              <ion-skeleton-text [animated]="true"></ion-skeleton-text>
+            </ion-thumbnail>
+            <ion-label>
+              <h3>
+                <ion-skeleton-text [animated]="true" style="width: 80%;"></ion-skeleton-text>
+              </h3>
+              <p>
+                <ion-skeleton-text [animated]="true" style="width: 60%;"></ion-skeleton-text>
+              </p>
+              <p>
+                <ion-skeleton-text [animated]="true" style="width: 30%;"></ion-skeleton-text>
+              </p>
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-thumbnail slot="start">
+              <ion-skeleton-text [animated]="true"></ion-skeleton-text>
+            </ion-thumbnail>
+            <ion-label>
+              <h3>
+                <ion-skeleton-text [animated]="true" style="width: 80%;"></ion-skeleton-text>
+              </h3>
+              <p>
+                <ion-skeleton-text [animated]="true" style="width: 60%;"></ion-skeleton-text>
+              </p>
+              <p>
+                <ion-skeleton-text [animated]="true" style="width: 30%;"></ion-skeleton-text>
+              </p>
+            </ion-label>
+          </ion-item>
         </ion-list>
-      </div>
+      </ng-template>
+
     </ion-col>
     <ion-col size="12" size-md="2"></ion-col>
   </ion-row>

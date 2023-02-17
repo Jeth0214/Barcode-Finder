@@ -8,5 +8,7 @@ export interface Transfer {
     barcode: string;
     date: Date;
     supplier_id: number;
+    created_at?: Date;
+    updated_at?: Date;
 }
 

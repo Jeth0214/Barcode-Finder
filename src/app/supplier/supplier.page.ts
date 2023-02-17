@@ -1,7 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, ParamMap, Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
+import { Response } from '../models/response.model';
+import { Supplier } from '../models/supplier.model';
 import { Transfer } from '../models/transfer.model';
+import { SuppliersService } from '../services/suppliers.service';
+import { AlertController } from '@ionic/angular';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-supplier',
@@ -10,52 +15,54 @@ import { Transfer } from '../models/transfer.model';
 })
 export class SupplierPage implements OnInit {
   id: number = 1;
-  transfer: Transfer = {
-    id: this.id,
-    gt: 456789,
-    items: [
-      {
-        id: 1,
-        gt: 12345,
-        lot: 'm38s',
-        qty: 15000
-      },
-      {
-        id: 2,
-        gt: 12345,
-        lot: 'KN4S',
-        qty: 1000
-      },
-      {
-        id: 3,
-        gt: 12345,
-        lot: 'HF3F',
-        qty: 5000
-      }
-    ],
-    barcode: '1676089338142.jpeg',
-    date: new Date(),
-    supplier_id: 1,
-    brand: '74'
-
-  }
+  transfers: Transfer[];
+  supplier: Supplier;
+  isloading: boolean = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private navController: NavController
+    private navController: NavController,
+    private suppliersService: SuppliersService,
+    private alertController: AlertController
+
   ) { }
 
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe((param: ParamMap) => {
       let id = +param.get('id');
       if (!id) {
-        this.router.navigate(['/home']);
-        return;
+        this.returnHome();
       }
       this.id = id;
+      this.getAllTransfers(id);
     })
   }
+
+  returnHome() {
+    this.router.navigate(['/home']);
+    return;
+  }
+
+
+  getAllTransfers(id: number) {
+    this.isloading = true;
+    this.suppliersService.getSupplierTransfers(this.id).subscribe(
+      (response) => {
+        if (response) {
+          this.isloading = false;
+          console.log('Transfers', response);
+          this.supplier = response.data;
+          this.transfers = response.data.transfers;
+        }
+      },
+      (error: HttpErrorResponse) => {
+        console.log('Error', error);
+        this.AlertError(error.status, error.statusText);
+      }
+    )
+  }
+
 
   onEdit() {
     console.log('Edit');
@@ -64,6 +71,32 @@ export class SupplierPage implements OnInit {
 
   onDelete() {
     console.log('Delete');
+  }
+
+  async AlertError(status: number, message: string) {
+    const alert = await this.alertController.create({
+      'header': 'Error',
+      'subHeader': `status:  ${status}`,
+      'message': message,
+      'buttons': [
+        {
+          text: 'Try Again',
+          role: 'confirm',
+          handler: () => {
+            this.getAllTransfers(this.id)
+          }
+        },
+        {
+          text: 'Back',
+          role: 'cancel',
+          handler: () => {
+            this.returnHome()
+          }
+        }
+      ]
+    });
+
+    alert.present();
   }
 
   goToItemDetails(transfer: Transfer) {
@@ -80,7 +113,7 @@ export class SupplierPage implements OnInit {
   onAdd() {
     console.log('Add item');
     let initialTransferData = {
-      brand: this.transfer.brand,
+      brand: this.supplier.code,
       supplier_id: this.id,
       action: 'Add',
     };
