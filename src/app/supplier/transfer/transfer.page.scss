@@ -5,3 +5,17 @@
 .position-absolute {
     position: absolute;
 }
+
+.ngx-barcode {
+    display: flex;
+    justify-content: center;
+}
+
+.row {
+    display: flex;
+
+}
+
+.justify-content-end {
+    justify-content: flex-end;
+}

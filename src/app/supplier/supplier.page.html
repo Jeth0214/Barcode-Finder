@@ -34,8 +34,8 @@
                 <ion-item-sliding>
                   <ion-item button detail="true" lines="full" (click)="goToItemDetails(transfer)">
                     <ion-thumbnail slot="start">
-                      <img alt="Silhouette of mountains"
-                        src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
+                      <ngx-barcode [bc-margin-top]="90" [bc-height]="200" bc-element-type="img"
+                        [bc-value]="'NA-10-BT-' + transfer.gt" [bc-display-value]="true"></ngx-barcode>
                     </ion-thumbnail>
                     <ion-label>
                       <h3 class="ion-margin-bottom">GT-{{transfer?.gt}}</h3>
@@ -58,8 +58,8 @@
           </ng-container>
           <ng-template #noTransfer>
             <div class="container ">
-              <ion-img class="ion-margin-top" src="../assets/images/sorry-item-not-found.png"
-                alt="no found item"></ion-img>
+              <ion-img class="ion-margin-top" src="../assets/images/sorry-item-not-found.png" alt="no found item">
+              </ion-img>
               <h3 class="ion-text-center">No Transfer Yet. Add new one.</h3>
             </div>
 

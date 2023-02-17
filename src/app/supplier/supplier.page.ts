@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, ParamMap, Router } from '@angular/router';
-import { NavController } from '@ionic/angular';
 import { Response } from '../models/response.model';
 import { Supplier } from '../models/supplier.model';
 import { Transfer } from '../models/transfer.model';
@@ -22,7 +21,6 @@ export class SupplierPage implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private navController: NavController,
     private suppliersService: SuppliersService,
     private alertController: AlertController
 
@@ -36,7 +34,8 @@ export class SupplierPage implements OnInit {
       }
       this.id = id;
       this.getAllTransfers(id);
-    })
+    });
+
   }
 
   returnHome() {
@@ -107,7 +106,7 @@ export class SupplierPage implements OnInit {
       }
     }
     // console.log('Go to items:', transfer);
-    this.router.navigate([`supplier/${this.id}/transfer/${transfer.gt}`], navigationExtras)
+    this.router.navigate([`supplier/${this.id}/transfer/${transfer.id}`], navigationExtras)
   }
 
   onAdd() {

@@ -6,7 +6,7 @@ import { TransferPage } from './transfer.page';
 const routes: Routes = [
   {
     path: '',
-    component: TransferPage
+    component: TransferPage,
   }
 ];
 
@@ -14,4 +14,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class TransferPageRoutingModule {}
+export class TransferPageRoutingModule { }

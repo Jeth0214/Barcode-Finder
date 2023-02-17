@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { NgxBarcodeModule } from 'ngx-barcode';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
@@ -18,7 +19,8 @@ import { far } from '@fortawesome/free-regular-svg-icons';
     IonicModule.forRoot(),
     AppRoutingModule,
     FontAwesomeModule,
-    HttpClientModule
+    HttpClientModule,
+    NgxBarcodeModule.forRoot(),
   ],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
