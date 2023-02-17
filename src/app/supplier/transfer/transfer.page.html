@@ -1,48 +1,64 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start" class="position-absolute">
-      <ion-back-button defaultHref="/supplier/{{transfer.supplier_id}}"></ion-back-button>
+      <ion-back-button defaultHref="/supplier/{{transfer?.supplier_id}}"></ion-back-button>
     </ion-buttons>
-    <ion-title class="ion-text-center ion-no-padding">GT-{{transfer.gt}}</ion-title>
+    <ion-title *ngIf="!isloading" class="ion-text-center ion-no-padding">GT-{{transfer?.gt}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-margin-top">
-  <ion-card class="ion-margin-top">
-    <img alt="Silhouette of mountains" [src]="sourceImage" />
-    <ion-card-header>
-      <ion-card-title>
-        <h2>{{ transfer.date | date:'shortDate':'dd/MM/YYYY'}}</h2>
-      </ion-card-title>
-    </ion-card-header>
+  <div class="container" *ngIf="!isloading">
 
-    <ion-card-content>
-      <ion-list>
-        <ion-list-header>
-          <h3>Items:</h3>
-        </ion-list-header>
-        <ion-list-header>
-          <ion-row class="ion-justify-content-between w-100">
-            <ion-col size="5">
-              <p>LOT</p>
-            </ion-col>
-            <ion-col size="5">
-              <p class="ion-text-end ion-padding-end">QTY</p>
-            </ion-col>
-          </ion-row>
-        </ion-list-header>
-        <ion-item *ngFor="let item of transfer.items">
-          <ion-row class="ion-justify-content-between w-100">
-            <ion-col size="5">
-              <p>{{item.lot}}</p>
-            </ion-col>
-            <ion-col size="5">
-              <p class="ion-text-end">{{item.qty}}</p>
-            </ion-col>
-          </ion-row>
+    <ion-card>
+      <ion-card-content>
+        <ngx-barcode class="ngx-barcode" [bc-height]="90" bc-element-type="img" [bc-value]="'NA-10-BT-' + transfer?.gt"
+          [bc-display-value]="true"></ngx-barcode>
+      </ion-card-content>
+    </ion-card>
 
-        </ion-item>
-      </ion-list>
-    </ion-card-content>
-  </ion-card>
+    <ion-card class="ion-margin-top">
+      <ion-card-header class="ion-no-margin">
+        <ion-card-title>
+          <h2 class="ion-no-margin">Date: {{ transfer?.created_at | date:'shortDate':'dd/MM/YYYY'}}</h2>
+        </ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <ion-list>
+          <ion-list-header class="ion-no-padding">
+            <h3>Items:</h3>
+          </ion-list-header>
+          <ion-list-header class="ion-no-padding">
+            <ion-row class="ion-justify-content-between w-100">
+              <ion-col size="5">
+                <p>LOT</p>
+              </ion-col>
+              <ion-col size="5">
+                <p class="ion-text-end ion-padding-end">QTY</p>
+              </ion-col>
+            </ion-row>
+          </ion-list-header>
+          <ion-item *ngFor="let item of transfer?.items" class="ion-no-padding">
+            <ion-row class=" ion-justify-content-between w-100">
+              <ion-col size="5">
+                <p>{{item.lot}}</p>
+              </ion-col>
+              <ion-col size="5">
+                <p class="ion-text-end">{{item.qty}}</p>
+              </ion-col>
+            </ion-row>
+
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+    <div class="row justify-content-end">
+      <div class="">
+        <ion-button shape="round" class="ion-margin-end" (click)="onEdit()">Edit</ion-button>
+        <ion-button shape="round" color="danger" (click)="onDelete()">Delete</ion-button>
+      </div>
+    </div>
+  </div>
 </ion-content>

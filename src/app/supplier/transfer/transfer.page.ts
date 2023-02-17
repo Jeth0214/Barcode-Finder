@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LocalFile } from 'src/app/models/local-file.model';
 import { Transfer } from 'src/app/models/transfer.model';
-import { BarcodeService } from 'src/app/services/barcode.service';
+import { TransferService } from 'src/app/services/transfer.service';
+import { AlertController, LoadingController } from '@ionic/angular';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-transfer',
@@ -12,29 +13,98 @@ import { BarcodeService } from 'src/app/services/barcode.service';
 export class TransferPage implements OnInit {
   transfer: Transfer;
   id: number;
-  sourceImage;
+  gt: number;
+  isloading: boolean = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private barcodeService: BarcodeService
+    private transferService: TransferService,
+    private alertController: AlertController,
+    private loadingController: LoadingController
   ) { }
 
-  async ngOnInit() {
+  ngOnInit() {
     this.activatedRoute.queryParams.subscribe(params => {
-      this.id = +params['id'];
-      if (this.router.getCurrentNavigation().extras.state) {
-        this.transfer = this.router.getCurrentNavigation().extras.state['transfer'];
-        console.log('details from supplier:', this.transfer);
+      if (!this.router.getCurrentNavigation().extras.state) {
+        this.isloading = true;
+        this.AlertError(404, 'No transfer found.');
+        return;
       }
-    })
-    this.sourceImage = await this.barcodeService.loadImageBase64Data(this.transfer.barcode);
+      let stateData = this.router.getCurrentNavigation().extras.state['transfer'];
+      this.id = stateData['id'];
+      this.gt = stateData['gt'];
+      this.getTransfer(this.id);
+    });
   }
 
+  async getTransfer(id: number) {
+    this.isloading = true;
+    const loading = await this.loadingController.create({
+      message: `Loading transfer..`,
+      spinner: 'circles'
+    });
 
+    loading.present();
+    this.transferService.getTransfer(id).subscribe(
+      async (response) => {
+        console.log('Response Transfer', response)
+        this.isloading = false;
+        await loading.dismiss();
+        if (!response) {
+          this.isloading = true
+          this.AlertError(400, 'Bad request');
+        }
+        this.transfer = response;
 
-  async getImageFromLocalFile() {
-
+      },
+      async (error: HttpErrorResponse) => {
+        console.log('Error', error);
+        this.isloading = true;
+        await loading.dismiss();
+        this.AlertError(error.status, error.statusText);
+      }
+    )
   }
+
+  async AlertError(status: number, message: string) {
+    const alert = await this.alertController.create({
+      'header': 'Error',
+      'subHeader': `status:  ${status}`,
+      'message': message,
+      'buttons': [
+        {
+          text: 'Try Again',
+          role: 'confirm',
+          handler: () => {
+            this.getTransfer(this.id)
+          }
+        },
+        {
+          text: 'Back',
+          role: 'cancel',
+          handler: () => {
+            this.returnHomePage()
+          }
+        }
+      ]
+    });
+
+    alert.present();
+  }
+
+  returnHomePage() {
+    this.router.navigate(['/home']);
+    return;
+  }
+
+  onEdit() {
+    console.log('Edit transfer', this.transfer);
+  }
+
+  onDelete() {
+    console.log('Delete transfer', this.transfer);
+  }
+
 
 }

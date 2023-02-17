@@ -38,7 +38,7 @@ export class AddEditTransferPage implements OnInit {
   ngOnInit() {
     this.transferForm = this.formBuilder.group({
       gt: [
-        '', [Validators.required, Validators.pattern('^[0-9]{5,5}$')]],
+        '', [Validators.required, Validators.pattern('^[0-9]{6,}$')]],
       items: new FormArray([
         new FormGroup({
           lot: new FormControl('', [Validators.required, Validators.minLength(4)]),

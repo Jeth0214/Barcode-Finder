@@ -8,6 +8,7 @@ import { SupplierPageRoutingModule } from './supplier-routing.module';
 
 import { SupplierPage } from './supplier.page';
 import { TransferPageModule } from './transfer/transfer.module';
+import { NgxBarcodeModule } from 'ngx-barcode';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { TransferPageModule } from './transfer/transfer.module';
     FormsModule,
     IonicModule,
     SupplierPageRoutingModule,
-    TransferPageModule
+    TransferPageModule,
+    NgxBarcodeModule,
   ],
   declarations: [SupplierPage]
 })

@@ -61,7 +61,7 @@
               class="ion-margin-vertical">
               <ion-icon name="alert-circle-outline" color="danger" size="medium"></ion-icon>
               <span *ngIf="item.get('lot')?.errors?.['required']"> Please provide the Lot. </span>
-              <span *ngIf="item.get('lot')?.errors?.['minlength']"> Lot must at least 4 characters. </span>
+              <span *ngIf="item.get('lot')?.errors?.['minlength']"> Lot must at least 6 characters. </span>
             </ion-note>
             <ion-note slot="error" *ngIf="item.get('qty')?.errors && item.get('qty').touched" color="danger"
               class="ion-margin-vertical">
