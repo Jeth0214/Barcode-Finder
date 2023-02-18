@@ -4,8 +4,9 @@ import { Response } from '../models/response.model';
 import { Supplier } from '../models/supplier.model';
 import { Transfer } from '../models/transfer.model';
 import { SuppliersService } from '../services/suppliers.service';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ToastController, LoadingController } from '@ionic/angular';
 import { HttpErrorResponse } from '@angular/common/http';
+import { TransferService } from 'src/app/services/transfer.service';
 
 @Component({
   selector: 'app-supplier',
@@ -22,7 +23,10 @@ export class SupplierPage implements OnInit {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private suppliersService: SuppliersService,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private transferService: TransferService,
+    private toastController: ToastController,
+    private loadingController: LoadingController
 
   ) { }
 
@@ -68,8 +72,32 @@ export class SupplierPage implements OnInit {
   }
 
 
-  onDelete() {
-    console.log('Delete');
+  async onDelete(transferToDelete: Transfer) {
+    console.log('Delete', transferToDelete);
+
+    const loading = await this.loadingController.create({
+      message: `Deleting GT-${transferToDelete.gt} ...`,
+      spinner: 'circles',
+    })
+    loading.present();
+
+    this.transferService.deleteTransfer(transferToDelete.id).subscribe(
+      async (response: Transfer) => {
+        loading.dismiss();
+
+        if (!response) {
+          this.AlertError(400, 'Delete Transfer failed');
+          return;
+        }
+        this.presentToast(transferToDelete.gt);
+        this.transfers = this.transfers.filter(transfer => { return transferToDelete.id != transfer.id });
+
+      },
+      async (error: HttpErrorResponse) => {
+        loading.dismiss();
+        this.AlertError(error.status, error.statusText);
+      }
+    )
   }
 
   async AlertError(status: number, message: string) {
@@ -98,6 +126,15 @@ export class SupplierPage implements OnInit {
     alert.present();
   }
 
+  async presentToast(gt: number) {
+    const toast = await this.toastController.create({
+      message: `GT-${gt} was successfully deleted.`,
+      duration: 1500,
+      position: 'middle'
+    });
+    await toast.present();
+  }
+
   goToItemDetails(transfer: Transfer) {
 
     let navigationExtras: NavigationExtras = {
@@ -112,7 +149,7 @@ export class SupplierPage implements OnInit {
   onAdd() {
     console.log('Add item');
     let initialTransferData = {
-      brand: this.supplier.code,
+      brand: this.supplier.brand,
       supplier_id: this.id,
       action: 'Add',
     };

@@ -6,22 +6,31 @@
 
 <ion-content>
   <div class="container">
-
-    <app-upload-barcode (capturedBarcode)="barcodeToSave($event)"></app-upload-barcode>
-
+    <ion-card *ngIf="showBarcode">
+      <ion-card-header class="ion-no-padding ion-margin-top">
+        <ion-card-title class="ion-text-center">
+          <h2 class="ion-no-margin">Barcode Preview</h2>
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content class="ion-no-padding ion-margin-top">
+        <ngx-barcode class="ngx-barcode" [bc-height]="70" bc-element-type="img" [bc-value]="'NA-10-BT-' + barcode"
+          [bc-display-value]="true"></ngx-barcode>
+      </ion-card-content>
+    </ion-card>
 
     <form [formGroup]="transferForm" (ngSubmit)="onSubmit()">
       <div class="ion-padding ion-margin-top">
         <!-- Gt form Control -->
         <ion-item fill="outline">
           <ion-label position="floating"> Gt: </ion-label>
-          <ion-input type="number" formControlName="gt" color="primary"></ion-input>
+          <ion-input (ionChange)="showBarcodePreview(transferForm.controls['gt'].value)" type="number"
+            formControlName="gt" color="primary"></ion-input>
           <ion-note slot="error" *ngIf="!transferForm.controls['gt'].valid && transferForm.controls['gt'].touched">
             <ion-icon name="alert-circle-outline" color="danger"></ion-icon>
 
             <span *ngIf="transferForm.controls['gt']?.errors?.['required']"> Please provide the Gt transfer number.
             </span>
-            <span *ngIf="transferForm.controls['gt']?.errors?.['pattern']"> Gt must 5 be integer. </span>
+            <span *ngIf="transferForm.controls['gt']?.errors?.['pattern']"> Gt must at least 6 integer. </span>
           </ion-note>
         </ion-item>
 
@@ -61,7 +70,7 @@
               class="ion-margin-vertical">
               <ion-icon name="alert-circle-outline" color="danger" size="medium"></ion-icon>
               <span *ngIf="item.get('lot')?.errors?.['required']"> Please provide the Lot. </span>
-              <span *ngIf="item.get('lot')?.errors?.['minlength']"> Lot must at least 6 characters. </span>
+              <span *ngIf="item.get('lot')?.errors?.['minlength']"> Lot must at least 4 characters. </span>
             </ion-note>
             <ion-note slot="error" *ngIf="item.get('qty')?.errors && item.get('qty').touched" color="danger"
               class="ion-margin-vertical">
@@ -72,17 +81,11 @@
           </div>
 
 
-          <ion-button type="button" color="dark" shape="round" expand="block" fill="solid" class="ion-margin-vertical"
-            (click)="addItem()">
+          <ion-button [disabled]="isSaving" type="button" color="dark" shape="round" expand="block" fill="solid"
+            class="ion-margin-vertical" (click)="addItem()">
             <ion-icon name="add-circle-outline" size="medium"></ion-icon> Add item
           </ion-button>
         </ng-container>
-
-        <!-- Barcode message -->
-        <ion-note slot="error" *ngIf="showBarcodeMessage" color="danger" class="ion-margin-vertical">
-          <ion-icon name="alert-circle-outline" color="danger" size="medium"></ion-icon>
-          <span> {{ showBarcodeMessage }} </span>
-        </ion-note>
 
         <!-- Actions buttons -->
         <ion-row class="ion-justify-content-between">
