@@ -44,3 +44,25 @@
     white-space: nowrap;
     border: 0;
 }
+
+.w-100 {
+    width: 100%;
+}
+
+.position-absolute {
+    position: absolute;
+}
+
+.ngx-barcode {
+    display: flex;
+    justify-content: center;
+}
+
+.row {
+    display: flex;
+
+}
+
+.justify-content-end {
+    justify-content: flex-end;
+}

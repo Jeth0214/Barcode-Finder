@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Transfer } from 'src/app/models/transfer.model';
 import { TransferService } from 'src/app/services/transfer.service';
-import { AlertController, LoadingController } from '@ionic/angular';
+import { AlertController, LoadingController, ToastController } from '@ionic/angular';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
@@ -21,7 +21,9 @@ export class TransferPage implements OnInit {
     private router: Router,
     private transferService: TransferService,
     private alertController: AlertController,
-    private loadingController: LoadingController
+    private loadingController: LoadingController,
+    private toastController: ToastController,
+
   ) { }
 
   ngOnInit() {
@@ -102,9 +104,44 @@ export class TransferPage implements OnInit {
     console.log('Edit transfer', this.transfer);
   }
 
-  onDelete() {
-    console.log('Delete transfer', this.transfer);
+  async onDelete(transferToDelete: Transfer) {
+    console.log('Delete', transferToDelete);
+
+    const loading = await this.loadingController.create({
+      message: `Deleting GT-${transferToDelete.gt} ...`,
+      spinner: 'circles',
+    })
+    loading.present();
+
+    this.transferService.deleteTransfer(transferToDelete.id).subscribe(
+      async (response: Transfer) => {
+        loading.dismiss();
+
+        if (!response) {
+          this.AlertError(400, 'Delete Transfer failed');
+          return;
+        }
+        this.router.navigate([`/supplier/${transferToDelete.supplier_id}`])
+        this.presentToast(transferToDelete.gt);
+        // setTimeout(() => {
+        // }, 1500)
+      },
+      async (error: HttpErrorResponse) => {
+        loading.dismiss();
+        this.AlertError(error.status, error.statusText);
+      }
+    )
   }
+
+  async presentToast(gt: number) {
+    const toast = await this.toastController.create({
+      message: `GT-${gt} was successfully deleted.`,
+      duration: 1000,
+      position: 'middle'
+    });
+    await toast.present();
+  }
+
 
 
 }

@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Photo } from '@capacitor/camera';
 import { AlertController, LoadingController } from '@ionic/angular';
 import { Transfer } from 'src/app/models/transfer.model';
-import { BarcodeService } from "../../services/barcode.service";
+import { TransferService } from 'src/app/services/transfer.service';
+import { HttpErrorResponse } from '@angular/common/http';
+
 
 @Component({
   selector: 'app-add-edit-transfer',
@@ -16,16 +17,16 @@ export class AddEditTransferPage implements OnInit {
   transferForm: FormGroup;
   itemsErrorMessage: string = '';
   isSaving: boolean = false;
-  showBarcodeMessage: string = '';
-  barcodeImage: Photo = undefined;
+  showBarcode: boolean = false;
+  barcode: string = '';
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private formBuilder: FormBuilder,
-    private barcodeService: BarcodeService,
     private alertController: AlertController,
-    private loadingController: LoadingController
+    private loadingController: LoadingController,
+    private transferService: TransferService
   ) {
     this.activatedRoute.queryParams.subscribe(params => {
       if (this.router.getCurrentNavigation().extras.state) {
@@ -70,10 +71,7 @@ export class AddEditTransferPage implements OnInit {
     this.items.removeAt(index);
   }
 
-  barcodeToSave(photo: Photo) {
-    this.showBarcodeMessage = '';
-    this.barcodeImage = photo;
-  }
+
 
   async onCancel() {
     const alert = await this.alertController.create({
@@ -103,10 +101,7 @@ export class AddEditTransferPage implements OnInit {
 
 
   async onSubmit() {
-    if (!this.barcodeImage) {
-      this.showBarcodeMessage = 'Please capture the barcode image';
-      return;
-    }
+
     this.isSaving = true;
     const loading = await this.loadingController.create({
       message: 'Saving...',
@@ -115,24 +110,26 @@ export class AddEditTransferPage implements OnInit {
 
     loading.present();
 
-    let barcode = await this.barcodeService.saveBarcodeImage(this.barcodeImage);
     let data = {
-      barcode: barcode,
       brand: this.initialTransferData.brand,
       supplier_id: this.initialTransferData.supplier_id,
       ...this.transferForm.value
     }
-
-    // TODO: Save the barcode image
-    console.log('submit', data);
-    //TODO: send data to server 
-    setTimeout(async () => {
-      this.reset(),
+    this.transferService.addTransfer(data).subscribe(
+      async (response: Transfer) => {
         loading.dismiss();
-    }, 2000);
-    setTimeout(async () => {
-      this.alertSavingResult('Success', 'Would you like to add  new transfer?')
-    }, 4000);
+        console.log(response)
+        if (!response) {
+          this.alertSavingResult('Error', 400, 'Error saving transfer');
+          return;
+        }
+        this.alertSavingResult('Success', 200, 'You have successfully added a transfer. Add new one?');
+      },
+      async (error: HttpErrorResponse) => {
+        loading.dismiss();
+        this.alertSavingResult('Error', error.status, error.statusText);
+      }
+    )
 
   }
 
@@ -141,13 +138,15 @@ export class AddEditTransferPage implements OnInit {
     this.items.clear();
     this.addItem();
     this.itemsErrorMessage = '';
-    this.showBarcodeMessage = '';
     this.isSaving = false;
+    this.showBarcode = false;
+    this.barcode = ''
   }
 
-  async alertSavingResult(result: string, resultMessage: string) {
+  async alertSavingResult(result: string, status: number, resultMessage: string) {
     const alert = await this.alertController.create({
-      header: 'result',
+      header: result,
+      subHeader: status.toString(),
       message: resultMessage,
       buttons: [
         {
@@ -161,12 +160,29 @@ export class AddEditTransferPage implements OnInit {
         {
           text: 'Yes',
           role: 'cancel',
-          handler: () => { }
+          handler: () => {
+            this.reset();
+          }
         }
       ]
     });
 
     await alert.present();
+  }
+
+  showBarcodePreview(value) {
+    if (value === '') {
+      return;
+    } else {
+
+      let barcode = value.toString();
+      if (barcode.length >= 6) {
+        this.showBarcode = true;
+        this.barcode = barcode;
+      } else {
+        this.showBarcode = false;
+      }
+    }
   }
 
 

@@ -8,6 +8,7 @@ import { AddEditTransferPageRoutingModule } from './add-edit-transfer-routing.mo
 
 import { AddEditTransferPage } from './add-edit-transfer.page';
 import { ComponentsModule } from 'src/app/components/components.module';
+import { NgxBarcodeModule } from 'ngx-barcode';
 
 @NgModule({
   imports: [
@@ -16,7 +17,8 @@ import { ComponentsModule } from 'src/app/components/components.module';
     IonicModule,
     AddEditTransferPageRoutingModule,
     ReactiveFormsModule,
-    ComponentsModule
+    ComponentsModule,
+    NgxBarcodeModule
   ],
   declarations: [AddEditTransferPage]
 })
