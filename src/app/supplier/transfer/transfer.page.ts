@@ -100,8 +100,9 @@ export class TransferPage implements OnInit {
     return;
   }
 
-  onEdit() {
+  onEdit(transfer: Transfer) {
     console.log('Edit transfer', this.transfer);
+
   }
 
   async onDelete(transferToDelete: Transfer) {
@@ -123,8 +124,6 @@ export class TransferPage implements OnInit {
         }
         this.router.navigate([`/supplier/${transferToDelete.supplier_id}`])
         this.presentToast(transferToDelete.gt);
-        // setTimeout(() => {
-        // }, 1500)
       },
       async (error: HttpErrorResponse) => {
         loading.dismiss();
