@@ -35,7 +35,7 @@
                   <ion-item button detail="true" lines="full" (click)="goToItemDetails(transfer)">
                     <ion-thumbnail slot="start">
                       <ngx-barcode [bc-margin-top]="90" [bc-height]="200" bc-element-type="img"
-                        [bc-value]="'NA-10-BT-' + transfer.gt" [bc-display-value]="true"></ngx-barcode>
+                        [bc-value]="'NA00-BT-' + transfer.gt" [bc-display-value]="true"></ngx-barcode>
                     </ion-thumbnail>
                     <ion-label>
                       <h3 class="ion-margin-bottom">GT-{{transfer?.gt}}</h3>
