@@ -77,7 +77,6 @@ export class SupplierPage implements OnInit {
         data: data,
       }
     }
-    console.log(navigationExtras)
     this.router.navigate([`supplier/${this.id}/add-edit-transfer`], navigationExtras)
   }
 
@@ -169,7 +168,6 @@ export class SupplierPage implements OnInit {
         data: data,
       }
     }
-    console.log('Add', navigationExtras);
     this.router.navigate([`supplier/${this.id}/add-edit-transfer`], navigationExtras)
   }
 

@@ -65,17 +65,22 @@ export class AddEditTransferPage implements OnInit {
   };
 
   async getTransfer(id: number) {
+    this.items.removeAt(0);
     this.transferService.getTransfer(id).subscribe(
       async (response) => {
-        if (response.items) {
+        console.log(response);
+        if (response) {
           let items = response.items;
           items.forEach(item => {
             this.addItem(item)
           })
+        } else {
+          this.alertResult('Error', 500, `Error loading data for this transfer.`);
         }
       },
       async (error: HttpErrorResponse) => {
-
+        console.log('Error', error);
+        this.alertResult('Error', error.status, error.statusText);
       }
     )
   }
@@ -83,18 +88,14 @@ export class AddEditTransferPage implements OnInit {
   addItem(item?: Item) {
     this.itemsErrorMessage = '';
     if (!this.transferForm.contains('items')) {
-      console.log('Please');
       this.transferForm.addControl('items',
         this.formBuilder.array([
           this.insertNewItemForm(),
         ])
       );
     } else {
-      this.removeItem(0);
       this.items.push(this.insertNewItemForm(item));
     }
-
-
   }
 
   removeItem(index: number) {
@@ -154,14 +155,14 @@ export class AddEditTransferPage implements OnInit {
         loading.dismiss();
         console.log(response)
         if (!response) {
-          this.alertSavingResult('Error', 400, 'Error saving transfer');
+          this.alertResult('Error', 400, 'Error saving transfer');
           return;
         }
-        this.alertSavingResult('Success', 200, 'You have successfully added a transfer. Add new one?');
+        this.alertResult('Success', 200, 'You have successfully added a transfer. Add new one?');
       },
       async (error: HttpErrorResponse) => {
         loading.dismiss();
-        this.alertSavingResult('Error', error.status, error.statusText);
+        this.alertResult('Error', error.status, error.statusText);
       }
     )
 
@@ -177,7 +178,7 @@ export class AddEditTransferPage implements OnInit {
     this.barcode = ''
   }
 
-  async alertSavingResult(result: string, status: number, resultMessage: string) {
+  async alertResult(result: string, status: number, resultMessage: string) {
     const alert = await this.alertController.create({
       header: result,
       subHeader: status.toString(),
