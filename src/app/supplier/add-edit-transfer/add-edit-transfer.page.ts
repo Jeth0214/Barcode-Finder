@@ -5,6 +5,7 @@ import { AlertController, LoadingController } from '@ionic/angular';
 import { Transfer } from 'src/app/models/transfer.model';
 import { TransferService } from 'src/app/services/transfer.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Item } from 'src/app/models/item.model';
 
 
 @Component({
@@ -13,12 +14,14 @@ import { HttpErrorResponse } from '@angular/common/http';
   styleUrls: ['./add-edit-transfer.page.scss'],
 })
 export class AddEditTransferPage implements OnInit {
-  initialTransferData: any = {};
   transferForm: FormGroup;
   itemsErrorMessage: string = '';
   isSaving: boolean = false;
   showBarcode: boolean = false;
   barcode: string = '';
+  title: string = '';
+  action: string = '';
+  transfer: any = {};
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -30,37 +33,68 @@ export class AddEditTransferPage implements OnInit {
   ) {
     this.activatedRoute.queryParams.subscribe(params => {
       if (this.router.getCurrentNavigation().extras.state) {
-        this.initialTransferData = this.router.getCurrentNavigation().extras.state['initialTransferData'];
-        console.log('Initial data to add:', this.initialTransferData);
+        let initialTransferData = this.router.getCurrentNavigation().extras.state['data'];
+        console.log('Initial data to add:', initialTransferData);
+        this.action = initialTransferData.action;
+        this.transfer = initialTransferData.transfer
+        this.title = this.action === 'add' ? 'Add Transfer' : `Edit GT-${this.transfer.gt}`
       }
     })
   }
 
   ngOnInit() {
+    this.setTransferForm();
+    if (this.transfer.gt) {
+      this.showBarcode = true;
+      this.barcode = this.transfer.gt;
+      this.getTransfer(this.transfer.id);
+    }
+  };
+
+  setTransferForm() {
+    let transfer = this.transfer;
     this.transferForm = this.formBuilder.group({
       gt: [
-        '', [Validators.required, Validators.pattern('^[0-9]{6,}$')]],
-      items: new FormArray([
-        new FormGroup({
-          lot: new FormControl('', [Validators.required, Validators.minLength(4)]),
-          qty: new FormControl('', [Validators.required, Validators.pattern("^[0-9]*$")])
-        })
-      ])
+        transfer.gt ? transfer.gt : '', [Validators.required, Validators.pattern('^[0-9]{6,}$')]],
     })
+    this.addItem();
   };
 
   get items(): FormArray {
     return this.transferForm.get('items') as FormArray;
+  };
+
+  async getTransfer(id: number) {
+    this.transferService.getTransfer(id).subscribe(
+      async (response) => {
+        if (response.items) {
+          let items = response.items;
+          items.forEach(item => {
+            this.addItem(item)
+          })
+        }
+      },
+      async (error: HttpErrorResponse) => {
+
+      }
+    )
   }
 
-  addItem() {
+  addItem(item?: Item) {
     this.itemsErrorMessage = '';
-    const itemsGroup = new FormGroup({
-      lot: new FormControl('', [Validators.required, Validators.minLength(4)]),
-      qty: new FormControl('', [Validators.required, Validators.pattern("^[0-9]*$")])
-    });
+    if (!this.transferForm.contains('items')) {
+      console.log('Please');
+      this.transferForm.addControl('items',
+        this.formBuilder.array([
+          this.insertNewItemForm(),
+        ])
+      );
+    } else {
+      this.removeItem(0);
+      this.items.push(this.insertNewItemForm(item));
+    }
 
-    this.items.push(itemsGroup);
+
   }
 
   removeItem(index: number) {
@@ -83,7 +117,7 @@ export class AddEditTransferPage implements OnInit {
           role: 'confirm',
           handler: () => {
             this.reset();
-            this.router.navigate([`/supplier/${this.initialTransferData.supplier_id}`]);
+            this.goBack();
           }
         },
         {
@@ -111,8 +145,8 @@ export class AddEditTransferPage implements OnInit {
     loading.present();
 
     let data = {
-      brand: this.initialTransferData.brand,
-      supplier_id: this.initialTransferData.supplier_id,
+      brand: this.transfer.brand,
+      supplier_id: this.transfer.supplier_id,
       ...this.transferForm.value
     }
     this.transferService.addTransfer(data).subscribe(
@@ -154,7 +188,7 @@ export class AddEditTransferPage implements OnInit {
           role: 'confirm',
           handler: () => {
             this.reset();
-            this.router.navigate([`/supplier/${this.initialTransferData.supplier_id}`]);
+            this.goBack();
           }
         },
         {
@@ -183,6 +217,18 @@ export class AddEditTransferPage implements OnInit {
         this.showBarcode = false;
       }
     }
+  }
+
+  goBack(): void {
+    this.router.navigate([`/supplier/${this.transfer.supplier_id}`]);
+  }
+
+  insertNewItemForm(item?: Item): FormGroup {
+
+    return new FormGroup({
+      lot: new FormControl(item ? item.lot : '', [Validators.required, Validators.minLength(4)]),
+      qty: new FormControl(item ? item.qty : '', [Validators.required, Validators.pattern("^[0-9]*$")])
+    });
   }
 
 

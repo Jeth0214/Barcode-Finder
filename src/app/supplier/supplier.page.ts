@@ -67,8 +67,18 @@ export class SupplierPage implements OnInit {
   }
 
 
-  onEdit() {
-    console.log('Edit');
+  onEdit(transfer: Transfer) {
+    let data = {
+      action: 'edit',
+      transfer: transfer
+    }
+    let navigationExtras: NavigationExtras = {
+      state: {
+        data: data,
+      }
+    }
+    console.log(navigationExtras)
+    this.router.navigate([`supplier/${this.id}/add-edit-transfer`], navigationExtras)
   }
 
 
@@ -147,17 +157,19 @@ export class SupplierPage implements OnInit {
   }
 
   onAdd() {
-    console.log('Add item');
-    let initialTransferData = {
-      brand: this.supplier.brand,
-      supplier_id: this.id,
-      action: 'Add',
+    let data = {
+      transfer: {
+        brand: this.supplier.brand,
+        supplier_id: this.id,
+      },
+      action: 'add',
     };
     let navigationExtras: NavigationExtras = {
       state: {
-        initialTransferData: initialTransferData
+        data: data,
       }
     }
+    console.log('Add', navigationExtras);
     this.router.navigate([`supplier/${this.id}/add-edit-transfer`], navigationExtras)
   }
 
