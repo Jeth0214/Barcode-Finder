@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AlertController, LoadingController } from '@ionic/angular';
+import { AlertController, LoadingController, ToastController } from '@ionic/angular';
 import { Transfer } from 'src/app/models/transfer.model';
 import { TransferService } from 'src/app/services/transfer.service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -29,12 +29,12 @@ export class AddEditTransferPage implements OnInit {
     private formBuilder: FormBuilder,
     private alertController: AlertController,
     private loadingController: LoadingController,
-    private transferService: TransferService
+    private transferService: TransferService,
+    private toastController: ToastController,
   ) {
     this.activatedRoute.queryParams.subscribe(params => {
       if (this.router.getCurrentNavigation().extras.state) {
         let initialTransferData = this.router.getCurrentNavigation().extras.state['data'];
-        console.log('Initial data to add:', initialTransferData);
         this.action = initialTransferData.action;
         this.transfer = initialTransferData.transfer
         this.title = this.action === 'add' ? 'Add Transfer' : `Edit GT-${this.transfer.gt}`
@@ -43,11 +43,13 @@ export class AddEditTransferPage implements OnInit {
   }
 
   ngOnInit() {
-    this.setTransferForm();
     if (this.transfer.gt) {
+      this.setTransferForm();
       this.showBarcode = true;
       this.barcode = this.transfer.gt;
       this.getTransfer(this.transfer.id);
+    } else {
+      this.setTransferForm();
     }
   };
 
@@ -139,7 +141,7 @@ export class AddEditTransferPage implements OnInit {
 
     this.isSaving = true;
     const loading = await this.loadingController.create({
-      message: 'Saving...',
+      message: this.action === 'add' ? 'Adding Transfer' : `Editing GT-${this.transfer.gt}`,
       spinner: 'circles',
     })
 
@@ -150,21 +152,42 @@ export class AddEditTransferPage implements OnInit {
       supplier_id: this.transfer.supplier_id,
       ...this.transferForm.value
     }
-    this.transferService.addTransfer(data).subscribe(
-      async (response: Transfer) => {
-        loading.dismiss();
-        console.log(response)
-        if (!response) {
-          this.alertResult('Error', 400, 'Error saving transfer');
-          return;
+
+    if (this.action === 'add') {
+
+      this.transferService.addTransfer(data).subscribe(
+        async (response: Transfer) => {
+          loading.dismiss();
+          console.log(response)
+          if (!response) {
+            this.alertResult('Error', 400, 'Error saving transfer');
+            return;
+          }
+          this.alertResult('Success', 200, 'You have successfully added a transfer. Add new one?');
+        },
+        async (error: HttpErrorResponse) => {
+          loading.dismiss();
+          this.alertResult('Error', error.status, error.statusText);
         }
-        this.alertResult('Success', 200, 'You have successfully added a transfer. Add new one?');
-      },
-      async (error: HttpErrorResponse) => {
-        loading.dismiss();
-        this.alertResult('Error', error.status, error.statusText);
-      }
-    )
+      )
+    } else {
+      this.transferService.updateTransfer(this.transfer.id, data).subscribe(
+        async (response: Transfer) => {
+          loading.dismiss();
+          console.log('Updated transfer', response);
+          if (!response) {
+            this.alertResult('Error', 400, 'Error saving transfer');
+            return;
+          }
+          this.router.navigate([`/supplier/${response.supplier_id}`])
+          this.presentToast(response.gt);
+        },
+        async (error: HttpErrorResponse) => {
+          loading.dismiss();
+          this.alertResult('Error', error.status, `${error.statusText}. Try again?`);
+        }
+      )
+    }
 
   }
 
@@ -232,6 +255,13 @@ export class AddEditTransferPage implements OnInit {
     });
   }
 
-
+  async presentToast(gt: number) {
+    const toast = await this.toastController.create({
+      message: `GT-${gt} was successfully updated.`,
+      duration: 1000,
+      position: 'middle'
+    });
+    await toast.present();
+  }
 
 }

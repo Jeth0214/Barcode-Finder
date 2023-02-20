@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { Transfer } from 'src/app/models/transfer.model';
 import { TransferService } from 'src/app/services/transfer.service';
 import { AlertController, LoadingController, ToastController } from '@ionic/angular';
@@ -101,7 +101,16 @@ export class TransferPage implements OnInit {
   }
 
   onEdit(transfer: Transfer) {
-    console.log('Edit transfer', this.transfer);
+    let data = {
+      action: 'edit',
+      transfer: transfer
+    }
+    let navigationExtras: NavigationExtras = {
+      state: {
+        data: data,
+      }
+    }
+    this.router.navigate([`supplier/${this.id}/add-edit-transfer`], navigationExtras)
 
   }
 

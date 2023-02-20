@@ -19,6 +19,10 @@ export class TransferService {
     return this.http.post<Transfer>(`${environment.apiBaseUrl}/transfers`, transfer);
   }
 
+  updateTransfer(id: number, transfer: Transfer): Observable<Transfer> {
+    return this.http.put<Transfer>(`${environment.apiBaseUrl}/transfers/${id}`, transfer);
+  }
+
   deleteTransfer(transferId): Observable<Transfer> {
     return this.http.delete<Transfer>(`${environment.apiBaseUrl}/transfers/${transferId}`);
   };
