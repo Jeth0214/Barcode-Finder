@@ -54,13 +54,12 @@ export class SupplierPage implements OnInit {
       (response) => {
         if (response) {
           this.isloading = false;
-          console.log('Transfers', response);
           this.supplier = response.data;
           this.transfers = response.data.transfers;
         }
       },
       (error: HttpErrorResponse) => {
-        console.log('Error', error);
+
         this.AlertError(error.status, error.statusText);
       }
     )
