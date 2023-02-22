@@ -51,10 +51,11 @@ export class SupplierPage implements OnInit {
     this.isloading = true;
     this.suppliersService.getSupplierTransfers(this.id).subscribe(
       (response) => {
+        console.log(response);
         if (response) {
           this.isloading = false;
-          this.supplier = response.data;
-          this.transfers = response.data.transfers;
+          this.supplier = response[0];
+          this.transfers = response[0].transfers;
         }
       },
       (error: HttpErrorResponse) => {

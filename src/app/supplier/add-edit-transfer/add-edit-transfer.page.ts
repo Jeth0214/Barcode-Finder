@@ -6,6 +6,8 @@ import { Transfer } from 'src/app/models/transfer.model';
 import { TransferService } from 'src/app/services/transfer.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Item } from 'src/app/models/item.model';
+import { Branch } from 'src/app/models/branch.model';
+import { BranchesService } from 'src/app/services/branches.service';
 
 
 @Component({
@@ -23,6 +25,7 @@ export class AddEditTransferPage implements OnInit {
   action: string = '';
   transfer: any = {};
   itemsFromResponse: Item[] = [];
+  branches: Branch[] = [];
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -30,8 +33,9 @@ export class AddEditTransferPage implements OnInit {
     private formBuilder: FormBuilder,
     private alertController: AlertController,
     private loadingController: LoadingController,
-    private transferService: TransferService,
     private toastController: ToastController,
+    private transferService: TransferService,
+    private branchesService: BranchesService
   ) {
     this.activatedRoute.queryParams.subscribe(params => {
       if (this.router.getCurrentNavigation().extras.state) {
@@ -44,6 +48,7 @@ export class AddEditTransferPage implements OnInit {
   }
 
   ngOnInit() {
+    this.getBranches();
     this.setTransferForm();
     if (this.transfer.gt) {
       this.showBarcodePreview(this.transfer.gt);
@@ -54,15 +59,30 @@ export class AddEditTransferPage implements OnInit {
   setTransferForm() {
     let transfer = this.transfer;
     this.transferForm = this.formBuilder.group({
-      gt: [
-        transfer.gt ? transfer.gt : '', [Validators.required, Validators.pattern('^[0-9]{6,}$')]],
-    })
-    this.addItem();
+      gt: [transfer.gt ? transfer.gt : '', [Validators.required, Validators.pattern('^[0-9]{6,}$')]],
+      bt: [transfer.bt ? transfer.gt : '', [Validators.required, Validators.pattern('^[0-9]{6,}$')]],
+      branch_id: [transfer.branch_id ? transfer.branch_id : '', Validators.required],
+      items: this.formBuilder.array([
+        this.insertNewItemForm(),
+      ])
+    });
+
   };
 
   get items(): FormArray {
     return this.transferForm.get('items') as FormArray;
   };
+
+  getBranches() {
+    this.branchesService.getAllBranches().subscribe(
+      (branches: Branch[]) => {
+        this.branches = branches;
+      },
+      (error: HttpErrorResponse) => {
+        this.alertResult('Error', error.status, error.statusText);
+      }
+    );
+  }
 
   async getTransfer(id: number) {
     this.items.removeAt(0);
@@ -86,12 +106,8 @@ export class AddEditTransferPage implements OnInit {
 
   addItem(items?: Item[]) {
     this.itemsErrorMessage = '';
-    if (!this.transferForm.contains('items')) {
-      this.transferForm.addControl('items',
-        this.formBuilder.array([
-          this.insertNewItemForm(),
-        ])
-      );
+    if (!items) {
+      this.items.push(this.insertNewItemForm());
     } else {
       items.forEach(item => {
         this.items.push(this.insertNewItemForm(item));
@@ -147,22 +163,23 @@ export class AddEditTransferPage implements OnInit {
     loading.present();
 
     let data = {
-      brand: this.transfer.brand,
       supplier_id: this.transfer.supplier_id,
       ...this.transferForm.value
     }
 
+    console.log(data);
     if (this.action === 'add') {
 
       this.transferService.addTransfer(data).subscribe(
         async (response: Transfer) => {
           loading.dismiss();
           this.isSaving = false;
-          console.log(response)
           if (!response) {
             this.alertResult('Error', 400, 'Error saving transfer');
             return;
           }
+          this.reset();
+          this.router.navigate([`/supplier/${response.supplier_id}`]);
           this.presentToast(response.gt, 'add')
         },
         async (error: HttpErrorResponse) => {

@@ -12,7 +12,8 @@
 
     <ion-card>
       <ion-card-content>
-        <ngx-barcode class="ngx-barcode" [bc-height]="90" bc-element-type="img" [bc-value]="'NA-10-BT-' + transfer?.gt"
+        <ngx-barcode class="ngx-barcode" [bc-height]="90" bc-element-type="img"
+          [bc-value]="'NA' + transfer?.branch?.branch_code +'-BT-' + transfer?.bt"
           [bc-display-value]="true"></ngx-barcode>
       </ion-card-content>
     </ion-card>
