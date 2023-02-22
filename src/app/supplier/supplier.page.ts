@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationExtras, ParamMap, Router } from '@angular/router';
-import { Response } from '../models/response.model';
+import { ActivatedRoute, NavigationExtras, ParamMap, Router } from '@angular/router';;
 import { Supplier } from '../models/supplier.model';
 import { Transfer } from '../models/transfer.model';
 import { SuppliersService } from '../services/suppliers.service';
