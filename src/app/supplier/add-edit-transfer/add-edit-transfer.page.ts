@@ -22,6 +22,7 @@ export class AddEditTransferPage implements OnInit {
   title: string = '';
   action: string = '';
   transfer: any = {};
+  itemsFromResponse: Item[] = [];
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -43,13 +44,10 @@ export class AddEditTransferPage implements OnInit {
   }
 
   ngOnInit() {
+    this.setTransferForm();
     if (this.transfer.gt) {
-      this.setTransferForm();
-      this.showBarcode = true;
-      this.barcode = this.transfer.gt;
+      this.showBarcodePreview(this.transfer.gt);
       this.getTransfer(this.transfer.id);
-    } else {
-      this.setTransferForm();
     }
   };
 
@@ -72,10 +70,9 @@ export class AddEditTransferPage implements OnInit {
       async (response) => {
         console.log(response);
         if (response) {
-          let items = response.items;
-          items.forEach(item => {
-            this.addItem(item)
-          })
+          this.itemsFromResponse = response.items;
+          this.addItem(this.itemsFromResponse)
+
         } else {
           this.alertResult('Error', 500, `Error loading data for this transfer.`);
         }
@@ -87,7 +84,7 @@ export class AddEditTransferPage implements OnInit {
     )
   }
 
-  addItem(item?: Item) {
+  addItem(items?: Item[]) {
     this.itemsErrorMessage = '';
     if (!this.transferForm.contains('items')) {
       this.transferForm.addControl('items',
@@ -96,7 +93,9 @@ export class AddEditTransferPage implements OnInit {
         ])
       );
     } else {
-      this.items.push(this.insertNewItemForm(item));
+      items.forEach(item => {
+        this.items.push(this.insertNewItemForm(item));
+      })
     }
   }
 
@@ -158,15 +157,17 @@ export class AddEditTransferPage implements OnInit {
       this.transferService.addTransfer(data).subscribe(
         async (response: Transfer) => {
           loading.dismiss();
+          this.isSaving = false;
           console.log(response)
           if (!response) {
             this.alertResult('Error', 400, 'Error saving transfer');
             return;
           }
-          this.alertResult('Success', 200, 'You have successfully added a transfer. Add new one?');
+          this.presentToast(response.gt, 'add')
         },
         async (error: HttpErrorResponse) => {
           loading.dismiss();
+          this.isSaving = false;
           this.alertResult('Error', error.status, error.statusText);
         }
       )
@@ -174,16 +175,18 @@ export class AddEditTransferPage implements OnInit {
       this.transferService.updateTransfer(this.transfer.id, data).subscribe(
         async (response: Transfer) => {
           loading.dismiss();
+          this.isSaving = false;
           console.log('Updated transfer', response);
           if (!response) {
             this.alertResult('Error', 400, 'Error saving transfer');
             return;
           }
           this.router.navigate([`/supplier/${response.supplier_id}`])
-          this.presentToast(response.gt);
+          this.presentToast(response.gt, this.action);
         },
         async (error: HttpErrorResponse) => {
           loading.dismiss();
+          this.isSaving = false;
           this.alertResult('Error', error.status, `${error.statusText}. Try again?`);
         }
       )
@@ -194,7 +197,6 @@ export class AddEditTransferPage implements OnInit {
   reset() {
     this.transferForm.reset();
     this.items.clear();
-    this.addItem();
     this.itemsErrorMessage = '';
     this.isSaving = false;
     this.showBarcode = false;
@@ -219,7 +221,6 @@ export class AddEditTransferPage implements OnInit {
           text: 'Yes',
           role: 'cancel',
           handler: () => {
-            this.reset();
           }
         }
       ]
@@ -229,17 +230,12 @@ export class AddEditTransferPage implements OnInit {
   }
 
   showBarcodePreview(value) {
-    if (value === '') {
-      return;
+    let barcode = value?.toString();
+    if (barcode?.length >= 6) {
+      this.showBarcode = true;
+      this.barcode = barcode;
     } else {
-
-      let barcode = value.toString();
-      if (barcode.length >= 6) {
-        this.showBarcode = true;
-        this.barcode = barcode;
-      } else {
-        this.showBarcode = false;
-      }
+      this.showBarcode = false;
     }
   }
 
@@ -255,9 +251,9 @@ export class AddEditTransferPage implements OnInit {
     });
   }
 
-  async presentToast(gt: number) {
+  async presentToast(gt: number, action: string) {
     const toast = await this.toastController.create({
-      message: `GT-${gt} was successfully updated.`,
+      message: `GT-${gt} was successfully ${action}ed.`,
       duration: 1000,
       position: 'middle'
     });
