@@ -60,7 +60,7 @@ export class AddEditTransferPage implements OnInit {
     let transfer = this.transfer;
     this.transferForm = this.formBuilder.group({
       gt: [transfer.gt ? transfer.gt : '', [Validators.required, Validators.pattern('^[0-9]{6,}$')]],
-      bt: [transfer.bt ? transfer.gt : '', [Validators.required, Validators.pattern('^[0-9]{6,}$')]],
+      bt: [transfer.bt ? transfer.bt : '', [Validators.required, Validators.pattern('^[0-9]{6,}$')]],
       branch_id: [transfer.branch_id ? transfer.branch_id : '', Validators.required],
       items: this.formBuilder.array([
         this.insertNewItemForm(),
