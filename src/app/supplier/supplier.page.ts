@@ -170,4 +170,6 @@ export class SupplierPage implements OnInit {
     this.router.navigate([`supplier/${this.id}/add-edit-transfer`], navigationExtras)
   }
 
+
+
 }

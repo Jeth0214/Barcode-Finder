@@ -6,19 +6,17 @@
 
 <ion-content>
   <div class="container">
-    <!-- <ion-card *ngIf="showBarcode">
-    <ion-card *ngIf="transferForm.controls['bt'].valid && transferForm.controls['branch_id'].valid">
+    <ion-card *ngIf="showBarcode">
       <ion-card-header class="ion-no-padding ion-margin-top">
         <ion-card-title class="ion-text-center">
           <h2 class="ion-no-margin">Barcode Preview</h2>
         </ion-card-title>
       </ion-card-header>
       <ion-card-content class="ion-no-padding ion-margin-top">
-        <ngx-barcode class="ngx-barcode" [bc-height]="70" bc-element-type="img"
-          [bc-value]="'NA' + transferForm.controls['branch_id'].value + '-BT-' + transferForm.controls['bt'].value"
+        <ngx-barcode class="ngx-barcode" [bc-height]="70" bc-element-type="img" [bc-value]="barcode"
           [bc-display-value]="true"></ngx-barcode>
       </ion-card-content>
-    </ion-card> -->
+    </ion-card>
 
     <form [formGroup]="transferForm" (ngSubmit)="onSubmit()">
       <div class="ion-padding ion-margin-top">
@@ -38,7 +36,8 @@
         <!-- BT form Control -->
         <ion-item fill="outline" class="ion-margin-top">
           <ion-label position="floating"> Bt: </ion-label>
-          <ion-input type="number" formControlName="bt" color="primary"></ion-input>
+          <ion-input type="number" formControlName="bt" color="primary"
+            (ionChange)="showBarcodePreview(transferForm.controls['bt'].value, branches[check.value - 1])"></ion-input>
           <ion-note slot="error" *ngIf="!transferForm.controls['bt'].valid && transferForm.controls['bt'].touched">
             <ion-icon name="alert-circle-outline" color="danger"></ion-icon>
 
@@ -51,7 +50,9 @@
         <!-- Branches -->
         <ion-item fill="outline" class="ion-margin-vertical">
           <ion-label>Select A Branch</ion-label>
-          <ion-select placeholder="Branches" formControlName="branch_id" name="branch_id">
+          <ion-select #check
+            (ionChange)="showBarcodePreview(transferForm.controls['bt'].value, branches[check.value - 1])"
+            placeholder="Branches" formControlName="branch_id" name="branch_id">
             <ion-select-option *ngFor="let branch of branches" [value]="branch.id">
               {{branch.name}}
             </ion-select-option>
