@@ -27,6 +27,7 @@ export class AddEditTransferPage implements OnInit {
   itemsFromResponse: Item[] = [];
   branches: Branch[] = [];
 
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -51,7 +52,6 @@ export class AddEditTransferPage implements OnInit {
     this.getBranches();
     this.setTransferForm();
     if (this.transfer.gt) {
-      this.showBarcodePreview(this.transfer.gt);
       this.getTransfer(this.transfer.id);
     }
   };
@@ -77,12 +77,16 @@ export class AddEditTransferPage implements OnInit {
     this.branchesService.getAllBranches().subscribe(
       (branches: Branch[]) => {
         this.branches = branches;
+        console.log(branches);
+
       },
       (error: HttpErrorResponse) => {
         this.alertResult('Error', error.status, error.statusText);
       }
     );
   }
+
+
 
   async getTransfer(id: number) {
     this.items.removeAt(0);
@@ -91,7 +95,8 @@ export class AddEditTransferPage implements OnInit {
         console.log(response);
         if (response) {
           this.itemsFromResponse = response.items;
-          this.addItem(this.itemsFromResponse)
+          this.addItem(this.itemsFromResponse);
+          this.showBarcodePreview(response.bt, response.branch);
 
         } else {
           this.alertResult('Error', 500, `Error loading data for this transfer.`);
@@ -246,12 +251,12 @@ export class AddEditTransferPage implements OnInit {
     await alert.present();
   }
 
-  showBarcodePreview(value) {
-    let barcode = value?.toString();
-    if (barcode?.length >= 6) {
+  showBarcodePreview(bt: number, branch: Branch) {
+    if (this.transferForm.controls['bt'].valid && this.transferForm.controls['branch_id'].valid) {
       this.showBarcode = true;
-      this.barcode = barcode;
-    } else {
+      this.barcode = `NA${branch.branch_code}-BT-${bt}`;
+    }
+    else {
       this.showBarcode = false;
     }
   }
