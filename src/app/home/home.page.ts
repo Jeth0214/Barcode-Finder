@@ -47,6 +47,7 @@ export class HomePage implements OnInit {
   }
 
   goToSupplier(supplier: string) {
+    console.log(supplier);
     this.router.navigate(['supplier/', { name: supplier }]);
   }
 
