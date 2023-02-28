@@ -42,8 +42,8 @@ export class AddEditTransferPage implements OnInit {
       if (this.router.getCurrentNavigation().extras.state) {
         let initialTransferData = this.router.getCurrentNavigation().extras.state['data'];
         this.action = initialTransferData.action;
-        this.transfer = initialTransferData.transfer
-        this.title = this.action === 'add' ? 'Add Transfer' : `Edit GT-${this.transfer.gt}`
+        this.transfer = initialTransferData.transfer;
+        this.title = this.action === 'add' ? 'Add Transfer' : `Edit GT-${this.transfer.gt}`;
       }
     })
   }
@@ -77,8 +77,6 @@ export class AddEditTransferPage implements OnInit {
     this.branchesService.getAllBranches().subscribe(
       (branches: Branch[]) => {
         this.branches = branches;
-        console.log(branches);
-
       },
       (error: HttpErrorResponse) => {
         this.alertResult('Error', error.status, error.statusText);
@@ -158,7 +156,6 @@ export class AddEditTransferPage implements OnInit {
 
 
   async onSubmit() {
-
     this.isSaving = true;
     const loading = await this.loadingController.create({
       message: this.action === 'add' ? 'Adding Transfer' : `Editing GT-${this.transfer.gt}`,

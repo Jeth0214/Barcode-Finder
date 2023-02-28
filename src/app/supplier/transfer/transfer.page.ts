@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { Location } from "@angular/common";
 import { Transfer } from 'src/app/models/transfer.model';
 import { TransferService } from 'src/app/services/transfer.service';
 import { AlertController, LoadingController, ToastController } from '@ionic/angular';
@@ -24,20 +25,19 @@ export class TransferPage implements OnInit {
     private alertController: AlertController,
     private loadingController: LoadingController,
     private toastController: ToastController,
-
+    private location: Location
   ) { }
 
   ngOnInit() {
-    this.activatedRoute.queryParams.subscribe(params => {
+    this.activatedRoute.paramMap.subscribe(params => {
+      this.id = +params.get('id');
       if (!this.router.getCurrentNavigation().extras.state) {
         this.isloading = true;
-        this.AlertError(404, 'No transfer found.');
+        this.AlertError(404, 'No transfer found or transfer id mismatch.');
         return;
       }
-      let stateData = this.router.getCurrentNavigation().extras.state['transfer'];
-      this.id = stateData['id'];
-      this.gt = stateData['gt'];
-      this.getTransfer(this.id);
+      this.transfer = this.router.getCurrentNavigation().extras.state['transfer'];
+      console.log(this.transfer);
     });
   }
 
@@ -86,7 +86,8 @@ export class TransferPage implements OnInit {
           text: 'Back',
           role: 'cancel',
           handler: () => {
-            this.returnHomePage()
+            this.location.back();
+            this.location.back();
           }
         }
       ]

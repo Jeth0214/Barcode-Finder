@@ -17,6 +17,7 @@ export class SupplierPage implements OnInit {
   transfers: Transfer[];
   supplier: Supplier;
   isloading: boolean = false;
+  searchTerm: string = '';
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -59,7 +60,6 @@ export class SupplierPage implements OnInit {
         }
       },
       (error: HttpErrorResponse) => {
-
         this.AlertError(error.status, error.statusText);
       }
     )
@@ -150,7 +150,7 @@ export class SupplierPage implements OnInit {
         transfer: transfer,
       }
     }
-    // console.log('Go to items:', transfer);
+    //console.log('Go to items:', transfer);
     this.router.navigate([`supplier/${this.id}/transfer/${transfer.id}`], navigationExtras)
   }
 
