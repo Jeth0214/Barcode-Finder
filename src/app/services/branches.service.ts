@@ -13,5 +13,6 @@ export class BranchesService {
 
   getAllBranches(): Observable<Branch[]> {
     return this.http.get<Branch[]>(`${environment.apiBaseUrl}/branches`)
-  }
+  };
+
 }

@@ -23,14 +23,15 @@
   <ion-row class="ion-margin-top">
     <ion-col size="12" size-md="2"></ion-col>
     <ion-col size="12" size-md="8">
-      <ion-searchbar *ngIf="!isloading &&  transfers?.length > 0" placeholder="Search barcode here"></ion-searchbar>
+      <ion-searchbar *ngIf="!isloading &&  transfers?.length > 0" placeholder="Search" [(ngModel)]="searchTerm"
+        animated="true">
+      </ion-searchbar>
 
       <ng-container *ngIf="!isloading else skeleton">
-
         <div class="ion-no-padding ion-no-margin">
           <ng-container *ngIf="transfers.length > 0 else noTransfer">
             <ion-list>
-              <ng-container *ngFor="let transfer of transfers">
+              <ng-container *ngFor="let transfer of transfers | filter: searchTerm">
                 <ion-item-sliding>
                   <ion-item button detail="true" lines="full" (click)="goToItemDetails(transfer)">
                     <ion-thumbnail slot="start">

@@ -9,6 +9,7 @@ import { SupplierPageRoutingModule } from './supplier-routing.module';
 import { SupplierPage } from './supplier.page';
 import { TransferPageModule } from './transfer/transfer.module';
 import { NgxBarcodeModule } from 'ngx-barcode';
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
 
 @NgModule({
   imports: [
@@ -18,6 +19,7 @@ import { NgxBarcodeModule } from 'ngx-barcode';
     SupplierPageRoutingModule,
     TransferPageModule,
     NgxBarcodeModule,
+    Ng2SearchPipeModule
   ],
   declarations: [SupplierPage]
 })
