@@ -8,6 +8,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Item } from 'src/app/models/item.model';
 import { Branch } from 'src/app/models/branch.model';
 import { BranchesService } from 'src/app/services/branches.service';
+import { Location } from "@angular/common";
 
 
 @Component({
@@ -23,8 +24,7 @@ export class AddEditTransferPage implements OnInit {
   barcode: string = '';
   title: string = '';
   action: string = '';
-  transfer: any = {};
-  itemsFromResponse: Item[] = [];
+  transfer: Transfer;
   branches: Branch[] = [];
 
 
@@ -36,8 +36,17 @@ export class AddEditTransferPage implements OnInit {
     private loadingController: LoadingController,
     private toastController: ToastController,
     private transferService: TransferService,
-    private branchesService: BranchesService
-  ) {
+    private branchesService: BranchesService,
+    private location: Location
+  ) { }
+
+  ngOnInit() {
+    this.getTransferData();
+    this.getBranches();
+    this.setTransferForm();
+  };
+
+  getTransferData() {
     this.activatedRoute.queryParams.subscribe(params => {
       if (this.router.getCurrentNavigation().extras.state) {
         let initialTransferData = this.router.getCurrentNavigation().extras.state['data'];
@@ -47,14 +56,6 @@ export class AddEditTransferPage implements OnInit {
       }
     })
   }
-
-  ngOnInit() {
-    this.getBranches();
-    this.setTransferForm();
-    if (this.transfer.gt) {
-      this.getTransfer(this.transfer.id);
-    }
-  };
 
   setTransferForm() {
     let transfer = this.transfer;
@@ -66,6 +67,12 @@ export class AddEditTransferPage implements OnInit {
         this.insertNewItemForm(),
       ])
     });
+
+    if (this.action == 'edit') {
+      this.items.removeAt(0);
+      this.showBarcodePreview(transfer.bt, transfer.branch);
+      this.addItem(transfer.items);
+    }
 
   };
 
@@ -86,26 +93,26 @@ export class AddEditTransferPage implements OnInit {
 
 
 
-  async getTransfer(id: number) {
-    this.items.removeAt(0);
-    this.transferService.getTransfer(id).subscribe(
-      async (response) => {
-        console.log(response);
-        if (response) {
-          this.itemsFromResponse = response.items;
-          this.addItem(this.itemsFromResponse);
-          this.showBarcodePreview(response.bt, response.branch);
+  // async getTransfer(id: number) {
+  //   this.items.removeAt(0);
+  //   this.transferService.getTransfer(id).subscribe(
+  //     async (response) => {
+  //       console.log(response);
+  //       if (response) {
+  //         this.itemsFromResponse = response.items;
+  //         this.addItem(this.itemsFromResponse);
+  //         this.showBarcodePreview(response.bt, response.branch);
 
-        } else {
-          this.alertResult('Error', 500, `Error loading data for this transfer.`);
-        }
-      },
-      async (error: HttpErrorResponse) => {
-        console.log('Error', error);
-        this.alertResult('Error', error.status, error.statusText);
-      }
-    )
-  }
+  //       } else {
+  //         this.alertResult('Error', 500, `Error loading data for this transfer.`);
+  //       }
+  //     },
+  //     async (error: HttpErrorResponse) => {
+  //       console.log('Error', error);
+  //       this.alertResult('Error', error.status, error.statusText);
+  //     }
+  //   )
+  // }
 
   addItem(items?: Item[]) {
     this.itemsErrorMessage = '';
@@ -167,11 +174,9 @@ export class AddEditTransferPage implements OnInit {
     let data = {
       supplier_id: this.transfer.supplier_id,
       ...this.transferForm.value
-    }
+    };
 
-    console.log(data);
     if (this.action === 'add') {
-
       this.transferService.addTransfer(data).subscribe(
         async (response: Transfer) => {
           loading.dismiss();
