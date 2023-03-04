@@ -6,15 +6,29 @@
       </div>
       <h1>Login</h1>
 
+      <ng-container *ngIf="isLoggingIn">
+        <div class="ion-text-center">
+          <ion-spinner color="primary"></ion-spinner>
+          <p>logging in..</p>
+        </div>
+
+      </ng-container>
+
+      <ng-container *ngIf="response">
+        <div class="ion-text-center">
+          <ion-text [color]="response.status">{{response.message}}</ion-text>
+        </div>
+
+      </ng-container>
+
       <!-- Form section -->
       <form [formGroup]="loginForm" (ngSubmit)="onLogin(loginForm.value)">
 
         <ion-item fill="outline" class="ion-margin-vertical">
-          <ion-label for="username" position="floating">Username</ion-label>
-          <ion-input formControlName="username" id="username"></ion-input>
+          <ion-label for="name" position="floating">Username</ion-label>
+          <ion-input formControlName="name" id="name"></ion-input>
           <ion-icon name="person-outline" slot="start"></ion-icon>
-          <ion-note class="ion-no-margin" slot="error" *ngIf="f['username'].errors && f['username'].touched"
-            color="danger">
+          <ion-note class="ion-no-margin" slot="error" *ngIf="f['name'].errors && f['name'].touched" color="danger">
             <ion-icon name="alert-circle-outline" color="danger" size="medium"></ion-icon>
             <span> Username is a must. </span>
           </ion-note>
@@ -33,8 +47,8 @@
           </ion-note>
         </ion-item>
 
-        <ion-button type="submit" [disabled]="!loginForm.valid" size="large" color="primary" expand="block"
-          class="ion-margin-vertical">Log
+        <ion-button type="submit" [disabled]="!loginForm.valid || isLoggingIn" size="large" color="primary"
+          expand="block" class="ion-margin-vertical">Log
           In</ion-button>
       </form>
 
@@ -44,7 +58,9 @@
       </div>
 
       <!-- Demo button -->
-      <ion-button size="large" color="dark" expand="block" class="ion-margin-vertical">Try Demo</ion-button>
+      <ion-button (click)="onTryDemo()" [disabled]="isLoggingIn" size="large" color="dark" expand="block"
+        class="ion-margin-vertical">Try
+        Demo</ion-button>
     </div>
 
     <div class="app ion-text-center">
