@@ -7,6 +7,7 @@ export interface Transfer {
     bt: number;
     branch: Branch;
     branch_id: number;
+    user_id: number;
     items: Item[];
     date: Date;
     supplier_id: number;
