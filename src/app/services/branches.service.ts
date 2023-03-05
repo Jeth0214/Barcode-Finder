@@ -8,11 +8,12 @@ import { Branch } from '../models/branch.model';
   providedIn: 'root'
 })
 export class BranchesService {
+  service: string = '/branches'
 
   constructor(private http: HttpClient) { }
 
   getAllBranches(): Observable<Branch[]> {
-    return this.http.get<Branch[]>(`${environment.apiBaseUrl}/branches`)
+    return this.http.get<Branch[]>(`${environment.apiBaseUrl}${this.service}`)
   };
 
 }
