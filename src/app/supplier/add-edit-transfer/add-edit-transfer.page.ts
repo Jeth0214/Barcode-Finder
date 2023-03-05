@@ -9,6 +9,8 @@ import { Item } from 'src/app/models/item.model';
 import { Branch } from 'src/app/models/branch.model';
 import { BranchesService } from 'src/app/services/branches.service';
 import { Location } from "@angular/common";
+import { AuthenticationService } from 'src/app/services/authentication.service';
+import { User } from 'src/app/models/user.model';
 
 
 @Component({
@@ -26,6 +28,7 @@ export class AddEditTransferPage implements OnInit {
   action: string = '';
   transfer: Transfer;
   branches: Branch[] = [];
+  user: User
 
 
   constructor(
@@ -37,10 +40,12 @@ export class AddEditTransferPage implements OnInit {
     private toastController: ToastController,
     private transferService: TransferService,
     private branchesService: BranchesService,
-    private location: Location
+    private location: Location,
+    private authService: AuthenticationService,
   ) { }
 
   ngOnInit() {
+    this.user = this.authService.currentUserValue;
     this.getTransferData();
     this.getBranches();
     this.setTransferForm();
@@ -172,6 +177,7 @@ export class AddEditTransferPage implements OnInit {
     loading.present();
 
     let data = {
+      user_id: this.user.id,
       supplier_id: this.transfer.supplier_id,
       ...this.transferForm.value
     };

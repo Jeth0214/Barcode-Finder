@@ -11,6 +11,7 @@ import { AuthenticationService } from './authentication.service';
 export class SuppliersService {
 
   headers: HttpHeaders;
+  service: string = '/suppliers';
 
   constructor(private http: HttpClient, private authService: AuthenticationService) {
     this.headers = new HttpHeaders({
@@ -20,10 +21,10 @@ export class SuppliersService {
   }
 
   getAllSuppliers(): Observable<Supplier[]> {
-    return this.http.get<Supplier[]>(`${environment.apiBaseUrl}/suppliers`, { headers: this.headers });
+    return this.http.get<Supplier[]>(`${environment.apiBaseUrl}${this.service}`, { headers: this.headers });
   };
 
   getSupplierTransfers(id: number): Observable<any> {
-    return this.http.get<any>(`${environment.apiBaseUrl}/suppliers/${id}`, { headers: this.headers });
+    return this.http.get<any>(`${environment.apiBaseUrl}${this.service}/${id}`, { headers: this.headers });
   }
 }

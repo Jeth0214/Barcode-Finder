@@ -33,8 +33,6 @@ export class AuthenticationService {
     return this.http.post<any>(`${environment.apiBaseUrl}/login`, user)
       .pipe(map(
         response => {
-          console.log('Response from service', response);
-
           localStorage.setItem('currentUser', JSON.stringify(response.user));
           localStorage.setItem('token', JSON.stringify(response.token));
           this.currentUserSubject.next(response.user);
@@ -43,5 +41,11 @@ export class AuthenticationService {
         }));
   }
 
-  logout() { }
+  logout() {
+    // remove user from local storage to log user out
+    localStorage.removeItem('currentUser');
+    localStorage.removeItem('token');
+    this.currentUserSubject.next(null);
+    this.tokenSubject.next(null);
+  }
 }
