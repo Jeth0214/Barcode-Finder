@@ -14,7 +14,7 @@
 
       </ng-container>
 
-      <ng-container *ngIf="response">
+      <ng-container *ngIf="showErrorMessage">
         <div class="ion-text-center">
           <ion-text [color]="response.status">{{response.message}}</ion-text>
         </div>

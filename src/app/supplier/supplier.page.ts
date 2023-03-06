@@ -55,7 +55,7 @@ export class SupplierPage implements OnInit {
         console.log(response);
         if (response) {
           this.isloading = false;
-          this.supplier = response;
+          this.supplier = response.supplier;
           this.transfers = response.transfers;
         }
       },

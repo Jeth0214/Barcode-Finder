@@ -17,9 +17,9 @@ export class AuthGuard implements CanActivate {
     let currentUser = this.authenticationService.currentUserValue;
     let token = this.authenticationService.tokenValue;
     // console.log('user from auth guard', currentUser);
-    if (!currentUser && token) {
+    if (!currentUser && !token) {
       this.authenticationService.logout();
-      this.router.navigate(['/']);
+      this.router.navigate(['/login']);
       return false;
     }
     return true;

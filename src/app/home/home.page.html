@@ -1,8 +1,17 @@
-<ion-content [fullscreen]="true" class="ion-padding ion-margin-vertical">
-  <div class="container">
+<ion-header>
+  <ion-toolbar>
+    <ion-icon slot="start" name="person-circle-outline" size="large"></ion-icon>
+    <ion-title>{{user.name}}</ion-title>
+  </ion-toolbar>
+</ion-header>
 
-    <ion-card>
-      <ion-card-content class="ion-no-padding ion-margin-top">
+
+
+<ion-content [fullscreen]="true" class="ion-margin-vertical">
+  <div class="container ion-no-padding">
+
+    <ion-card class="ion-no-margin ion-margin-top">
+      <ion-card-content class="ion-margin-top">
         <ngx-barcode class="ngx-barcode" [bc-height]="70" bc-element-type="img" bc-value="Find Master Barcode"
           [bc-display-value]="true"></ngx-barcode>
       </ion-card-content>
@@ -26,8 +35,6 @@
         </ion-row>
       </div>
     </ng-container>
-
-
   </div>
   <ng-container *ngIf="hasSuppliers">
     <div class="container ">
@@ -36,5 +43,15 @@
       <h3 class="ion-text-center">No Suppliers Found.</h3>
     </div>
   </ng-container>
-
 </ion-content>
+
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-button type="button" size="large" expand="block" color="danger" fill="solid" strong="true" (click)="onLogOut()"
+      [disabled]="isLoading">
+      <ion-icon name="log-out-outline"></ion-icon>
+      logout
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>

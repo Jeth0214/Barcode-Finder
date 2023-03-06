@@ -23,6 +23,7 @@ export class LoginPage implements OnInit {
   loginForm: FormGroup;
   isLoggingIn: boolean = false;
   response: RESPONSE;
+  showErrorMessage: boolean = false;
 
   constructor(
     private formbuilder: FormBuilder,
@@ -75,10 +76,12 @@ export class LoginPage implements OnInit {
           console.log('response from api', response);
           this.loginForm.reset();
           this.isLoggingIn = false;
+          this.showErrorMessage = false;
           this.response = response;
           this.router.navigate(['/home']);
         },
         error: error => {
+          this.showErrorMessage = true;
           this.isLoggingIn = false;
           this.response = error.error;
           console.log(this.response);
