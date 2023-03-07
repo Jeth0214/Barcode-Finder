@@ -49,7 +49,7 @@ export class LoginPage implements OnInit {
   onLogin(formValue) {
     this.isLoggingIn = true;
     this.response = null;
-    console.log('formValue', formValue);
+    //console.log('formValue', formValue);
     let data: User = {
       role: 'admin',
       ...formValue
@@ -68,12 +68,12 @@ export class LoginPage implements OnInit {
   }
 
   onSubmit(data) {
-    console.log('data to send to server', data);
+    // console.log('data to send to server', data);
     this.authenticationService.login(data)
       .pipe(first())
       .subscribe({
         next: (response) => {
-          console.log('response from api', response);
+          // console.log('response from api', response);
           this.loginForm.reset();
           this.isLoggingIn = false;
           this.showErrorMessage = false;

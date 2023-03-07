@@ -145,7 +145,7 @@ export class TransferPage implements OnInit {
   async presentToast(gt: number) {
     const toast = await this.toastController.create({
       message: `GT-${gt} was successfully deleted.`,
-      duration: 1000,
+      duration: 800,
       position: 'middle'
     });
     await toast.present();

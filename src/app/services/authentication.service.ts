@@ -43,16 +43,11 @@ export class AuthenticationService {
 
   logout() {
     // logout  user from api
+    localStorage.removeItem('currentUser');
+    localStorage.removeItem('token');
+    this.currentUserSubject.next(null);
+    this.tokenSubject.next(null);
     return this.http.post<any>(`${environment.apiBaseUrl}/logout`, this.currentUserValue)
-      .pipe(map(
-        response => {
-          // remove user from local storage to log user out
-          localStorage.removeItem('currentUser');
-          localStorage.removeItem('token');
-          this.currentUserSubject.next(null);
-          this.tokenSubject.next(null);
-        }));
-
 
   }
 }
