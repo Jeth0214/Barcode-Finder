@@ -38,7 +38,7 @@
 
         <ion-item fill="outline">
           <ion-label for="password" position="floating">Password</ion-label>
-          <ion-input formControlName="password" id="password"></ion-input>
+          <ion-input type="password" formControlName="password" id="password"></ion-input>
           <ion-icon name="key-outline" slot="start"></ion-icon>
           <ion-note class="ion-no-margin" slot="error" *ngIf="f['password'].errors && f['password'].touched"
             color="danger">

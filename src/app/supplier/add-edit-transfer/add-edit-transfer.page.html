@@ -82,12 +82,12 @@
         <ng-container formArrayName="items">
           <div *ngFor="let item of items.controls; index as i" [formGroupName]="i">
             <ion-row class="ion-justify-content-between ion-align-items-center">
-              <ion-col size="4">
+              <ion-col size="5">
                 <ion-item fill="outline">
                   <ion-input formControlName="lot" color="primary"></ion-input>
                 </ion-item>
               </ion-col>
-              <ion-col size=" 4">
+              <ion-col size=" 5">
                 <ion-item fill="outline">
                   <ion-input type="number" formControlName="qty" color="primary"></ion-input>
                 </ion-item>

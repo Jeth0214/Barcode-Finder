@@ -6,6 +6,7 @@ import { SuppliersService } from '../services/suppliers.service';
 import { AlertController, ToastController, LoadingController } from '@ionic/angular';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TransferService } from 'src/app/services/transfer.service';
+import { first } from 'rxjs';
 
 @Component({
   selector: 'app-supplier',
@@ -18,6 +19,7 @@ export class SupplierPage implements OnInit {
   supplier: Supplier;
   isloading: boolean = false;
   searchTerm: string = '';
+  hasTransfer: boolean = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -35,11 +37,15 @@ export class SupplierPage implements OnInit {
       let id = +param.get('id');
       if (!id) {
         this.returnHome();
+        return;
       }
       this.id = id;
-      this.getAllTransfers(id);
+      this.getAllTransfersOfSupplier(id);
     });
+  }
 
+  ionViewWillEnter() {
+    this.getAllTransfersOfSupplier(this.id);
   }
 
   returnHome() {
@@ -48,21 +54,24 @@ export class SupplierPage implements OnInit {
   }
 
 
-  getAllTransfers(id: number) {
+  getAllTransfersOfSupplier(id: number) {
     this.isloading = true;
-    this.suppliersService.getSupplierTransfers(this.id).subscribe(
-      (response) => {
-        console.log(response);
-        if (response) {
-          this.isloading = false;
-          this.supplier = response.supplier;
-          this.transfers = response.transfers;
+    this.suppliersService.getSupplierTransfers(this.id).pipe(
+      first()).subscribe({
+        next: (response) => {
+          console.log(response);
+          if (response) {
+            this.isloading = false;
+            this.supplier = response.supplier;
+            this.transfers = response.transfers;
+            this.hasTransfer = response.transfers.length <= 0 ? true : false;
+          }
+        },
+        error: (error: HttpErrorResponse) => {
+
+          this.AlertError(error.status, error.statusText);
         }
-      },
-      (error: HttpErrorResponse) => {
-        this.AlertError(error.status, error.statusText);
-      }
-    )
+      })
   }
 
 
@@ -89,23 +98,22 @@ export class SupplierPage implements OnInit {
     })
     loading.present();
 
-    this.transferService.deleteTransfer(transferToDelete.id).subscribe(
-      async (response: Transfer) => {
-        loading.dismiss();
-
-        if (!response) {
-          this.AlertError(400, 'Delete Transfer failed');
-          return;
+    this.transferService.deleteTransfer(transferToDelete.id)
+      .pipe(first())
+      .subscribe({
+        next: async (response: Transfer) => {
+          loading.dismiss();
+          this.presentToast(transferToDelete.gt);
+          this.transfers = this.transfers.filter(transfer => { return transferToDelete.id != transfer.id });
+          if (this.transfers.length <= 0) {
+            this.hasTransfer = true;
+          }
+        },
+        error: async (error: HttpErrorResponse) => {
+          loading.dismiss();
+          this.AlertError(error.status, error.statusText);
         }
-        this.presentToast(transferToDelete.gt);
-        this.transfers = this.transfers.filter(transfer => { return transferToDelete.id != transfer.id });
-
-      },
-      async (error: HttpErrorResponse) => {
-        loading.dismiss();
-        this.AlertError(error.status, error.statusText);
-      }
-    )
+      })
   }
 
   async AlertError(status: number, message: string) {
@@ -118,7 +126,7 @@ export class SupplierPage implements OnInit {
           text: 'Try Again',
           role: 'confirm',
           handler: () => {
-            this.getAllTransfers(this.id)
+            this.getAllTransfersOfSupplier(this.id)
           }
         },
         {
@@ -137,8 +145,8 @@ export class SupplierPage implements OnInit {
   async presentToast(gt: number) {
     const toast = await this.toastController.create({
       message: `GT-${gt} was successfully deleted.`,
-      duration: 1500,
-      position: 'middle'
+      duration: 800,
+      position: 'bottom'
     });
     await toast.present();
   }

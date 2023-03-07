@@ -32,6 +32,11 @@ export class HomePage implements OnInit {
     this.user = this.authService.currentUserValue;
   }
 
+  ionViewWillEnter() {
+    this.getSuppliers();
+    this.user = this.authService.currentUserValue;
+  }
+
   async getSuppliers() {
     this.isLoading = true;
     const loading = await this.loadingController.create({
@@ -80,7 +85,6 @@ export class HomePage implements OnInit {
   }
 
   onLogOut() {
-    console.log('log out');
     this.authService.logout();
     this.router.navigate(['/login']);
   }

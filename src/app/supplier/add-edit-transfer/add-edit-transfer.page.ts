@@ -11,6 +11,7 @@ import { BranchesService } from 'src/app/services/branches.service';
 import { Location } from "@angular/common";
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { User } from 'src/app/models/user.model';
+import { first } from 'rxjs';
 
 
 @Component({
@@ -91,33 +92,13 @@ export class AddEditTransferPage implements OnInit {
         this.branches = branches;
       },
       (error: HttpErrorResponse) => {
-        this.alertResult('Error', error.status, error.statusText);
+        this.alertErrorResult('Error', error.status, error.statusText);
       }
     );
   }
 
 
 
-  // async getTransfer(id: number) {
-  //   this.items.removeAt(0);
-  //   this.transferService.getTransfer(id).subscribe(
-  //     async (response) => {
-  //       console.log(response);
-  //       if (response) {
-  //         this.itemsFromResponse = response.items;
-  //         this.addItem(this.itemsFromResponse);
-  //         this.showBarcodePreview(response.bt, response.branch);
-
-  //       } else {
-  //         this.alertResult('Error', 500, `Error loading data for this transfer.`);
-  //       }
-  //     },
-  //     async (error: HttpErrorResponse) => {
-  //       console.log('Error', error);
-  //       this.alertResult('Error', error.status, error.statusText);
-  //     }
-  //   )
-  // }
 
   addItem(items?: Item[]) {
     this.itemsErrorMessage = '';
@@ -172,7 +153,7 @@ export class AddEditTransferPage implements OnInit {
     const loading = await this.loadingController.create({
       message: this.action === 'add' ? 'Adding Transfer' : `Editing GT-${this.transfer.gt}`,
       spinner: 'circles',
-    })
+    });
 
     loading.present();
 
@@ -183,45 +164,46 @@ export class AddEditTransferPage implements OnInit {
     };
 
     if (this.action === 'add') {
-      this.transferService.addTransfer(data).subscribe(
-        async (response: Transfer) => {
-          loading.dismiss();
-          this.isSaving = false;
-          if (!response) {
-            this.alertResult('Error', 400, 'Error saving transfer');
-            return;
-          }
-          this.reset();
-          this.router.navigate([`/supplier/${response.supplier_id}`]);
-          this.presentToast(response.gt, 'add')
-        },
-        async (error: HttpErrorResponse) => {
-          loading.dismiss();
-          this.isSaving = false;
-          this.alertResult('Error', error.status, error.statusText);
-        }
-      )
+      this.onAddToServer(data, 'add');
     } else {
-      this.transferService.updateTransfer(this.transfer.id, data).subscribe(
-        async (response: Transfer) => {
-          loading.dismiss();
-          this.isSaving = false;
-          console.log('Updated transfer', response);
-          if (!response) {
-            this.alertResult('Error', 400, 'Error saving transfer');
-            return;
-          }
-          this.router.navigate([`/supplier/${response.supplier_id}`])
-          this.presentToast(response.gt, this.action);
-        },
-        async (error: HttpErrorResponse) => {
-          loading.dismiss();
-          this.isSaving = false;
-          this.alertResult('Error', error.status, `${error.statusText}. Try again?`);
-        }
-      )
+      this.onEditToServer(data, 'edit');
     }
+  }
 
+  onAddToServer(data, action) {
+    this.transferService.addTransfer(data).pipe(first()).subscribe({
+      next: (response: Transfer) => {
+        this.onSuccessSave(response, action)
+      },
+      error: (error: HttpErrorResponse) => {
+        this.onErrorSave(error);
+      }
+    })
+  };
+
+  onEditToServer(data, action) {
+    this.transferService.updateTransfer(this.transfer.id, data).pipe(first()).subscribe({
+      next: (response: Transfer) => {
+        this.onSuccessSave(response, action)
+      },
+      error: (error: HttpErrorResponse) => {
+        this.onErrorSave(error);
+      }
+    })
+  }
+
+  onSuccessSave(response: Transfer, action: string) {
+    this.loadingController.dismiss();
+    this.isSaving = false;
+    this.presentToast(response.gt, action);
+    this.reset();
+    this.router.navigate([`/supplier/${response.supplier_id}`]);
+  };
+
+  onErrorSave(error: HttpErrorResponse) {
+    this.loadingController.dismiss();
+    this.isSaving = false;
+    this.alertErrorResult('Error', error.status, error.statusText);
   }
 
   reset() {
@@ -233,7 +215,7 @@ export class AddEditTransferPage implements OnInit {
     this.barcode = ''
   }
 
-  async alertResult(result: string, status: number, resultMessage: string) {
+  async alertErrorResult(result: string, status: number, resultMessage: string) {
     const alert = await this.alertController.create({
       header: result,
       subHeader: status.toString(),
@@ -284,10 +266,9 @@ export class AddEditTransferPage implements OnInit {
   async presentToast(gt: number, action: string) {
     const toast = await this.toastController.create({
       message: `GT-${gt} was successfully ${action}ed.`,
-      duration: 1000,
-      position: 'middle'
+      duration: 800,
+      position: 'bottom'
     });
     await toast.present();
   }
-
 }

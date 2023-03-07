@@ -4,8 +4,9 @@
       <ion-back-button defaultHref="/home"></ion-back-button>
     </ion-buttons>
     <ion-title class="ion-text-center ion-no-padding ion-text-uppercase">
-      <span *ngIf="isloading"> <ion-spinner name="lines" class="ion-margin-end"></ion-spinner> Loading
-        Transfers...</span>
+      <!-- <span *ngIf="isloading"> <ion-spinner name="lines" class="ion-margin-end"></ion-spinner> Loading
+        Transfers...</span> -->
+      <!-- <span *ngIf="!isloading">{{ supplier?.name }}</span> -->
       <span *ngIf="!isloading">{{ supplier?.name }}</span>
     </ion-title>
   </ion-toolbar>
@@ -23,111 +24,114 @@
   <ion-row class="ion-margin-top">
     <ion-col size="12" size-md="2"></ion-col>
     <ion-col size="12" size-md="8">
-      <ion-searchbar *ngIf="!isloading &&  transfers?.length > 0" placeholder="Search" [(ngModel)]="searchTerm"
-        animated="true">
-      </ion-searchbar>
+      <ng-container *ngIf="!isloading &&  transfers?.length > 0">
+        <ion-searchbar placeholder="Search" [(ngModel)]="searchTerm" animated="true">
+        </ion-searchbar>
 
-      <ng-container *ngIf="!isloading else skeleton">
-        <div class="ion-no-padding ion-no-margin">
-          <ng-container *ngIf="transfers.length > 0 else noTransfer">
-            <ion-list>
-              <ng-container *ngFor="let transfer of transfers | filter: searchTerm">
-                <ion-item-sliding>
-                  <ion-item button detail="true" lines="full" (click)="goToItemDetails(transfer)">
-                    <ion-thumbnail slot="start">
-                      <ngx-barcode [bc-margin-top]="90" [bc-height]="200" bc-element-type="img"
-                        [bc-value]="'NA00-BT-' + transfer.gt" [bc-display-value]="true"></ngx-barcode>
-                    </ion-thumbnail>
-                    <ion-label>
-                      <h3 class="ion-margin-bottom">GT-{{transfer?.gt}}</h3>
-                      <p>{{transfer?.created_at | date:'shortDate':'dd/MM/YYYY' }}</p>
-                    </ion-label>
-                  </ion-item>
+        <ng-container>
+          <div class="ion-no-padding ion-no-margin">
+            <ng-container>
+              <ion-list>
+                <ng-container *ngFor="let transfer of transfers | filter: searchTerm">
+                  <ion-item-sliding>
+                    <ion-item button detail="true" lines="full" (click)="goToItemDetails(transfer)">
+                      <ion-thumbnail slot="start">
+                        <ngx-barcode [bc-margin-top]="90" [bc-height]="200" bc-element-type="img"
+                          [bc-value]="'NA00-BT-' + transfer.gt" [bc-display-value]="true"></ngx-barcode>
+                      </ion-thumbnail>
+                      <ion-label>
+                        <h3 class="ion-margin-bottom">GT-{{transfer?.gt}}</h3>
+                        <p>{{transfer?.created_at | date:'shortDate':'dd/MM/YYYY' }}</p>
+                      </ion-label>
+                    </ion-item>
 
-                  <ion-item-options side="end">
-                    <ion-item-option color="primary" (click)="onEdit(transfer)">
-                      <ion-icon slot="icon-only" name="create-outline"></ion-icon>
-                    </ion-item-option>
-                    <ion-item-option color="danger" (click)="onDelete(transfer)">
-                      <ion-icon slot="icon-only" name="trash"></ion-icon>
-                    </ion-item-option>
-                  </ion-item-options>
+                    <ion-item-options side="end">
+                      <ion-item-option color="primary" (click)="onEdit(transfer)">
+                        <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+                      </ion-item-option>
+                      <ion-item-option color="danger" (click)="onDelete(transfer)">
+                        <ion-icon slot="icon-only" name="trash"></ion-icon>
+                      </ion-item-option>
+                    </ion-item-options>
 
-                </ion-item-sliding>
-              </ng-container>
-            </ion-list>
-          </ng-container>
-          <ng-template #noTransfer>
-            <div class="container ">
-              <ion-img class="ion-margin-top" src="../assets/images/sorry-item-not-found.png" alt="no found item">
-              </ion-img>
-              <h3 class="ion-text-center">No Transfer Yet. Add new one.</h3>
-            </div>
+                  </ion-item-sliding>
+                </ng-container>
+              </ion-list>
+            </ng-container>
 
-          </ng-template>
-        </div>
+          </div>
+        </ng-container>
+
       </ng-container>
 
-      <!-- Skeleton section -->
-      <ng-template #skeleton>
-        <ion-list>
-          <ion-list-header>
-            <ion-skeleton-text [animated]="true" style="width: 80px"></ion-skeleton-text>
-          </ion-list-header>
-          <ion-item>
-            <ion-thumbnail slot="start">
-              <ion-skeleton-text [animated]="true"></ion-skeleton-text>
-            </ion-thumbnail>
-            <ion-label>
-              <h3>
-                <ion-skeleton-text [animated]="true" style="width: 80%;"></ion-skeleton-text>
-              </h3>
-              <p>
-                <ion-skeleton-text [animated]="true" style="width: 60%;"></ion-skeleton-text>
-              </p>
-              <p>
-                <ion-skeleton-text [animated]="true" style="width: 30%;"></ion-skeleton-text>
-              </p>
-            </ion-label>
-          </ion-item>
-          <ion-item>
-            <ion-thumbnail slot="start">
-              <ion-skeleton-text [animated]="true"></ion-skeleton-text>
-            </ion-thumbnail>
-            <ion-label>
-              <h3>
-                <ion-skeleton-text [animated]="true" style="width: 80%;"></ion-skeleton-text>
-              </h3>
-              <p>
-                <ion-skeleton-text [animated]="true" style="width: 60%;"></ion-skeleton-text>
-              </p>
-              <p>
-                <ion-skeleton-text [animated]="true" style="width: 30%;"></ion-skeleton-text>
-              </p>
-            </ion-label>
-          </ion-item>
-          <ion-item>
-            <ion-thumbnail slot="start">
-              <ion-skeleton-text [animated]="true"></ion-skeleton-text>
-            </ion-thumbnail>
-            <ion-label>
-              <h3>
-                <ion-skeleton-text [animated]="true" style="width: 80%;"></ion-skeleton-text>
-              </h3>
-              <p>
-                <ion-skeleton-text [animated]="true" style="width: 60%;"></ion-skeleton-text>
-              </p>
-              <p>
-                <ion-skeleton-text [animated]="true" style="width: 30%;"></ion-skeleton-text>
-              </p>
-            </ion-label>
-          </ion-item>
-        </ion-list>
-      </ng-template>
+      <div *ngIf="hasTransfer">
+        <div class="container ">
+          <ion-img class="ion-margin-top" src="../assets/images/sorry-item-not-found.png" alt="no found item">
+          </ion-img>
+          <h3 class="ion-text-center">No Transfer Yet. Add new one.</h3>
+        </div>
 
+      </div>
     </ion-col>
     <ion-col size="12" size-md="2"></ion-col>
   </ion-row>
+
+  <!-- Skeleton section
+  <ng-container *ngIf="showSkeleton">
+    <ion-list>
+      <ion-list-header>
+        <ion-skeleton-text [animated]="true" style="width: 80px"></ion-skeleton-text>
+      </ion-list-header>
+      <ion-item>
+        <ion-thumbnail slot="start">
+          <ion-skeleton-text [animated]="true"></ion-skeleton-text>
+        </ion-thumbnail>
+        <ion-label>
+          <h3>
+            <ion-skeleton-text [animated]="true" style="width: 80%;"></ion-skeleton-text>
+          </h3>
+          <p>
+            <ion-skeleton-text [animated]="true" style="width: 60%;"></ion-skeleton-text>
+          </p>
+          <p>
+            <ion-skeleton-text [animated]="true" style="width: 30%;"></ion-skeleton-text>
+          </p>
+        </ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-thumbnail slot="start">
+          <ion-skeleton-text [animated]="true"></ion-skeleton-text>
+        </ion-thumbnail>
+        <ion-label>
+          <h3>
+            <ion-skeleton-text [animated]="true" style="width: 80%;"></ion-skeleton-text>
+          </h3>
+          <p>
+            <ion-skeleton-text [animated]="true" style="width: 60%;"></ion-skeleton-text>
+          </p>
+          <p>
+            <ion-skeleton-text [animated]="true" style="width: 30%;"></ion-skeleton-text>
+          </p>
+        </ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-thumbnail slot="start">
+          <ion-skeleton-text [animated]="true"></ion-skeleton-text>
+        </ion-thumbnail>
+        <ion-label>
+          <h3>
+            <ion-skeleton-text [animated]="true" style="width: 80%;"></ion-skeleton-text>
+          </h3>
+          <p>
+            <ion-skeleton-text [animated]="true" style="width: 60%;"></ion-skeleton-text>
+          </p>
+          <p>
+            <ion-skeleton-text [animated]="true" style="width: 30%;"></ion-skeleton-text>
+          </p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </ng-container> -->
 
 
 </ion-content>
