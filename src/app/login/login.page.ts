@@ -49,10 +49,15 @@ export class LoginPage implements OnInit {
   onLogin(formValue) {
     this.isLoggingIn = true;
     this.response = null;
-    //console.log('formValue', formValue);
+    console.log('formValue', formValue);
+    // let data: User = {
+    //   role: 'admin',
+    //   ...formValue
+    // };
     let data: User = {
       role: 'admin',
-      ...formValue
+      name: 'rolandwms',
+      password: 'rolandwms10'
     };
     this.onSubmit(data);
   }
@@ -60,20 +65,20 @@ export class LoginPage implements OnInit {
   onTryDemo() {
     console.log('try demo');
     let data: User = {
-      name: 'Demo User',
       role: 'demo',
+      name: 'Demo User',
       password: '123456'
     };
     this.onSubmit(data);
   }
 
   onSubmit(data) {
-    // console.log('data to send to server', data);
+    console.log('data to send to server', data);
     this.authenticationService.login(data)
       .pipe(first())
       .subscribe({
         next: (response) => {
-          // console.log('response from api', response);
+          console.log('response from api', response);
           this.loginForm.reset();
           this.isLoggingIn = false;
           this.showErrorMessage = false;

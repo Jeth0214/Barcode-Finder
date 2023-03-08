@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { User } from '../models/user.model';
@@ -14,10 +15,10 @@ export class AuthenticationService {
   private tokenSubject: BehaviorSubject<string>;
   public token: Observable<string>;
 
-  constructor(private http: HttpClient) {
-    this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
+  constructor(private http: HttpClient, private router: Router) {
+    this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser'))) || null;
     this.currentUser = this.currentUserSubject.asObservable();
-    this.tokenSubject = new BehaviorSubject<string>(JSON.parse(localStorage.getItem('token')));
+    this.tokenSubject = new BehaviorSubject<string>(JSON.parse(localStorage.getItem('token'))) || null;
     this.token = this.tokenSubject.asObservable();
   }
 
@@ -33,6 +34,7 @@ export class AuthenticationService {
     return this.http.post<any>(`${environment.apiBaseUrl}/login`, user)
       .pipe(map(
         response => {
+          console.log(response);
           localStorage.setItem('currentUser', JSON.stringify(response.user));
           localStorage.setItem('token', JSON.stringify(response.token));
           this.currentUserSubject.next(response.user);
@@ -42,12 +44,20 @@ export class AuthenticationService {
   }
 
   logout() {
-    // logout  user from api
-    localStorage.removeItem('currentUser');
-    localStorage.removeItem('token');
-    this.currentUserSubject.next(null);
-    this.tokenSubject.next(null);
-    return this.http.post<any>(`${environment.apiBaseUrl}/logout`, this.currentUserValue)
+
+    return this.http.get<any>(`${environment.apiBaseUrl}/logout`).pipe(
+      map(response => {
+        console.log(response);
+        if (response.status === 'Success') {
+          // logout  user from api
+          localStorage.removeItem('currentUser');
+          localStorage.removeItem('token');
+          this.currentUserSubject.next(null);
+          this.tokenSubject.next(null);
+          this.router.navigate(['/login']);
+        }
+      })
+    )
 
   }
 }
