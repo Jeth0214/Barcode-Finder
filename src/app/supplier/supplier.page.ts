@@ -44,9 +44,6 @@ export class SupplierPage implements OnInit {
     });
   }
 
-  ionViewWillEnter() {
-    this.getAllTransfersOfSupplier(this.id);
-  }
 
   returnHome() {
     this.router.navigate(['/home']);
@@ -56,22 +53,21 @@ export class SupplierPage implements OnInit {
 
   getAllTransfersOfSupplier(id: number) {
     this.isloading = true;
-    this.suppliersService.getSupplierTransfers(this.id).pipe(
-      first()).subscribe({
-        next: (response) => {
-          console.log(response);
-          if (response) {
-            this.isloading = false;
-            this.supplier = response.supplier;
-            this.transfers = response.transfers;
-            this.hasTransfer = response.transfers.length <= 0 ? true : false;
-          }
-        },
-        error: (error: HttpErrorResponse) => {
-
-          this.AlertError(error.status, error.statusText);
+    this.suppliersService.getSupplierTransfers(id).subscribe({
+      next: (response) => {
+        console.log(response);
+        if (response) {
+          this.isloading = false;
+          this.supplier = response.supplier;
+          this.transfers = response.transfers;
+          this.hasTransfer = response.transfers.length <= 0 ? true : false;
         }
-      })
+      },
+      error: (error: HttpErrorResponse) => {
+
+        this.AlertError(error.status, error.statusText);
+      }
+    })
   }
 
 
