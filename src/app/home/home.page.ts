@@ -37,6 +37,7 @@ export class HomePage implements OnInit {
     this.user = this.authService.currentUserValue;
   }
 
+
   async getSuppliers() {
     this.isLoading = true;
     const loading = await this.loadingController.create({
@@ -47,6 +48,8 @@ export class HomePage implements OnInit {
     await loading.present();
     this.suppliersService.getAllSuppliers().subscribe(
       async (response: Supplier[]) => {
+        // console.log(response);
+
         await loading.dismiss();
         this.isLoading = false;
         this.suppliers = response;
@@ -85,7 +88,7 @@ export class HomePage implements OnInit {
   }
 
   onLogOut() {
-    this.authService.logout();
-    // this.router.navigate(['/login']);
+    this.authService.logout().subscribe();
   }
+
 }

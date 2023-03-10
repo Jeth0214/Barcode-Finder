@@ -6,6 +6,7 @@ import { TransferService } from 'src/app/services/transfer.service';
 import { AlertController, LoadingController, ToastController } from '@ionic/angular';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Branch } from 'src/app/models/branch.model';
+import { first } from 'rxjs';
 
 @Component({
   selector: 'app-transfer',
@@ -37,7 +38,7 @@ export class TransferPage implements OnInit {
         return;
       }
       this.transfer = this.router.getCurrentNavigation().extras.state['transfer'];
-      console.log(this.transfer);
+      // console.log(this.transfer);
     });
   }
 
@@ -49,24 +50,24 @@ export class TransferPage implements OnInit {
     });
 
     loading.present();
-    this.transferService.getTransfer(id).subscribe(
-      async (response) => {
+    this.transferService.getTransfer(id).pipe(first()).subscribe({
+      next: async (response) => {
         this.isloading = false;
         await loading.dismiss();
-        console.log(response);
+        //console.log(response);
         if (!response) {
           this.isloading = true
           this.AlertError(400, 'Bad request');
         }
         this.transfer = response;
-
       },
-      async (error: HttpErrorResponse) => {
+      error: async (error: HttpErrorResponse) => {
         this.isloading = true;
         await loading.dismiss();
         this.AlertError(error.status, error.statusText);
       }
-    )
+    })
+
   }
 
   async AlertError(status: number, message: string) {
