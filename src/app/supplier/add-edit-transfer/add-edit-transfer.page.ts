@@ -52,6 +52,9 @@ export class AddEditTransferPage implements OnInit {
     this.setTransferForm();
   };
 
+
+
+
   getTransferData() {
     this.activatedRoute.queryParams.subscribe(params => {
       if (this.router.getCurrentNavigation().extras.state) {
@@ -149,6 +152,7 @@ export class AddEditTransferPage implements OnInit {
 
 
   async onSubmit() {
+    if (this.transferForm.invalid) return;
     this.isSaving = true;
     const loading = await this.loadingController.create({
       message: this.action === 'add' ? 'Adding Transfer' : `Editing GT-${this.transfer.gt}`,

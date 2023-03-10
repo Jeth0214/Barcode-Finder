@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar class="container">
-    <ion-icon slot="start" name="person-circle-outline" size="large"></ion-icon>
-    <ion-title>{{user.name}}</ion-title>
+    <ion-icon *ngIf="user" slot="start" name="person-circle-outline" size="large"></ion-icon>
+    <ion-title>{{user?.name}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
