@@ -55,7 +55,7 @@ export class SupplierPage implements OnInit {
     this.isloading = true;
     this.suppliersService.getSupplierTransfers(id).subscribe({
       next: (response) => {
-        console.log(response);
+        //console.log(response);
         if (response) {
           this.isloading = false;
           this.supplier = response.supplier;

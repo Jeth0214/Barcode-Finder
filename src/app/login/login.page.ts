@@ -49,7 +49,7 @@ export class LoginPage implements OnInit {
   onLogin(formValue) {
     this.isLoggingIn = true;
     this.response = null;
-    console.log('formValue', formValue);
+    // console.log('formValue', formValue);
     // let data: User = {
     //   role: 'admin',
     //   ...formValue
@@ -63,7 +63,8 @@ export class LoginPage implements OnInit {
   }
 
   onTryDemo() {
-    console.log('try demo');
+    this.isLoggingIn = true;
+    this.response = null;
     let data: User = {
       role: 'demo',
       name: 'Demo User',
@@ -73,23 +74,23 @@ export class LoginPage implements OnInit {
   }
 
   onSubmit(data) {
-    console.log('data to send to server', data);
+    //console.log('login data', data);
     this.authenticationService.login(data)
       .pipe(first())
       .subscribe({
         next: (response) => {
-          console.log('response from api', response);
+          // console.log('response from api', response);
           this.loginForm.reset();
           this.isLoggingIn = false;
           this.showErrorMessage = false;
           this.response = response;
           this.router.navigate(['/home']);
         },
-        error: error => {
+        error: (error: HttpErrorResponse) => {
           this.showErrorMessage = true;
           this.isLoggingIn = false;
           this.response = error.error;
-          console.log(this.response);
+          // console.log(this.response);
         }
       });
   }

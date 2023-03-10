@@ -14,17 +14,14 @@ export class SuppliersService {
   service: string = '/suppliers';
 
   constructor(private http: HttpClient, private authService: AuthenticationService) {
-    this.headers = new HttpHeaders({
-      'Accept': 'application/json',
-      'Authorization': `Bearer ${this.authService.tokenValue}`
-    })
+
   }
 
   getAllSuppliers(): Observable<Supplier[]> {
-    return this.http.get<Supplier[]>(`${environment.apiBaseUrl}${this.service}`, { headers: this.headers });
+    return this.http.get<Supplier[]>(`${environment.apiBaseUrl}${this.service}`);
   };
 
   getSupplierTransfers(id: number): Observable<any> {
-    return this.http.get<any>(`${environment.apiBaseUrl}${this.service}/${id}`, { headers: this.headers });
+    return this.http.get<any>(`${environment.apiBaseUrl}${this.service}/${id}`);
   }
 }

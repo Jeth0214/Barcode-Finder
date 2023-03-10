@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, map, Observable } from 'rxjs';
@@ -14,11 +14,12 @@ export class AuthenticationService {
   public currentUser: Observable<User>;
   private tokenSubject: BehaviorSubject<string>;
   public token: Observable<string>;
+  headers: HttpHeaders;
 
   constructor(private http: HttpClient, private router: Router) {
-    this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser'))) || null;
+    this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
     this.currentUser = this.currentUserSubject.asObservable();
-    this.tokenSubject = new BehaviorSubject<string>(JSON.parse(localStorage.getItem('token'))) || null;
+    this.tokenSubject = new BehaviorSubject<string>(JSON.parse(localStorage.getItem('token')));
     this.token = this.tokenSubject.asObservable();
   }
 
@@ -34,7 +35,7 @@ export class AuthenticationService {
     return this.http.post<any>(`${environment.apiBaseUrl}/login`, user)
       .pipe(map(
         response => {
-          console.log(response);
+          //  console.log(response);
           localStorage.setItem('currentUser', JSON.stringify(response.user));
           localStorage.setItem('token', JSON.stringify(response.token));
           this.currentUserSubject.next(response.user);
@@ -44,10 +45,17 @@ export class AuthenticationService {
   }
 
   logout() {
+    // console.log(this.currentUserValue);
+    // console.log(this.tokenValue);
+    // console.log(this.headers);
+    // this.headers = new HttpHeaders({
+    //   'Accept': 'application/json',
+    //   'Authorization': `Bearer ${this.tokenValue}`
+    // })
 
-    return this.http.get<any>(`${environment.apiBaseUrl}/logout`).pipe(
+    return this.http.post<any>(`${environment.apiBaseUrl}/logout`, this.currentUserValue).pipe(
       map(response => {
-        console.log(response);
+        // console.log(response);
         if (response.status === 'Success') {
           // logout  user from api
           localStorage.removeItem('currentUser');
