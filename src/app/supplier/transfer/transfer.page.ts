@@ -117,7 +117,7 @@ export class TransferPage implements OnInit {
   }
 
   async onDelete(transferToDelete: Transfer) {
-    console.log('Delete', transferToDelete);
+    // console.log('Delete', transferToDelete);
 
     const loading = await this.loadingController.create({
       message: `Deleting GT-${transferToDelete.gt} ...`,
@@ -125,22 +125,23 @@ export class TransferPage implements OnInit {
     })
     loading.present();
 
-    this.transferService.deleteTransfer(transferToDelete.id).subscribe(
-      async (response: Transfer) => {
-        loading.dismiss();
-
-        if (!response) {
-          this.AlertError(400, 'Delete Transfer failed');
-          return;
+    this.transferService.deleteTransfer(transferToDelete.id)
+      .pipe(first())
+      .subscribe({
+        next: async (response: Transfer) => {
+          loading.dismiss();
+          if (!response) {
+            this.AlertError(400, 'Delete Transfer failed');
+            return;
+          }
+          this.router.navigate([`/supplier/${transferToDelete.supplier_id}`])
+          this.presentToast(transferToDelete.gt);
+        },
+        error: async (error: HttpErrorResponse) => {
+          loading.dismiss();
+          this.AlertError(error.status, error.statusText);
         }
-        this.router.navigate([`/supplier/${transferToDelete.supplier_id}`])
-        this.presentToast(transferToDelete.gt);
-      },
-      async (error: HttpErrorResponse) => {
-        loading.dismiss();
-        this.AlertError(error.status, error.statusText);
-      }
-    )
+      })
   }
 
   async presentToast(gt: number) {

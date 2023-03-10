@@ -6,6 +6,7 @@ import { LoadingController, AlertController } from '@ionic/angular';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthenticationService } from '../services/authentication.service';
 import { User } from '../models/user.model';
+import { first } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -27,68 +28,60 @@ export class HomePage implements OnInit {
     private authService: AuthenticationService
   ) { }
 
-  ngOnInit() {
-    this.getSuppliers();
-    this.user = this.authService.currentUserValue;
+  async ngOnInit() {
+    this.isLoading = true;
+    this.presentLoading('Loading suppliers..').then(async () => {
+      this.loadingController.dismiss();
+      this.getSuppliers();
+    })
+
   }
 
   ionViewWillEnter() {
     this.getSuppliers();
-    this.user = this.authService.currentUserValue;
   }
 
 
-  async getSuppliers() {
-    this.isLoading = true;
-    const loading = await this.loadingController.create({
-      message: 'Loading suppliers..',
-      spinner: 'circles'
-    })
-
-    await loading.present();
-    this.suppliersService.getAllSuppliers().subscribe(
-      async (response: Supplier[]) => {
-        // console.log(response);
-
-        await loading.dismiss();
+  getSuppliers() {
+    this.suppliersService.getAllSuppliers().pipe(first()).subscribe({
+      next: async (response: Supplier[]) => {
         this.isLoading = false;
+        this.user = this.authService.currentUserValue;
+        //this.loadingController.dismiss();
         this.suppliers = response;
         this.hasSuppliers = response.length <= 0;
-      },
-      async (error: HttpErrorResponse) => {
-        this.isLoading = false;
-        await loading.dismiss();
-        this.alertError('Error', error.status, error.statusText);
       }
-    )
+    })
   }
 
   goToSupplier(supplier: string) {
-    console.log(supplier);
+    // console.log(supplier);
     this.router.navigate(['supplier/', { name: supplier }]);
   }
 
-  async alertError(result: string, status: number, message: string) {
-    const alert = await this.alertController.create({
-      header: result,
-      subHeader: status.toString(),
-      message: message,
-      buttons: [
-        {
-          text: 'OK',
-          role: 'confirm',
-          handler: () => {
-            this.hasSuppliers = true;
-          },
-        },
-      ]
-    })
 
-    await alert.present();
+
+  async onLogOut() {
+    this.isLoading = true;
+    const loading = await this.loadingController.create({
+      message: `logging out ${this.user.name}..`,
+      spinner: 'circles'
+    });
+    await loading.present();
+    this.authService.logout().subscribe({
+      next: async (response) => {
+        console.log('logout response', response);
+        this.isLoading = false;
+        await loading.dismiss();
+      }
+    });
   }
 
-  onLogOut() {
-    this.authService.logout().subscribe();
+  async presentLoading(message) {
+    const loading = await this.loadingController.create({
+      message: message,
+    });
+    return loading.present();
   }
 
 }
