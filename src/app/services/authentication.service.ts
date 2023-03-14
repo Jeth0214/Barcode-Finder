@@ -35,28 +35,20 @@ export class AuthenticationService {
     return this.http.post<any>(`${environment.apiBaseUrl}/login`, user)
       .pipe(map(
         response => {
-          //  console.log(response);
-          localStorage.setItem('currentUser', JSON.stringify(response.user));
-          localStorage.setItem('token', JSON.stringify(response.token));
-          this.currentUserSubject.next(response.user);
-          this.tokenSubject.next(response.token);
+          // console.log('login response: ' + response);
+          localStorage.setItem('currentUser', JSON.stringify(response.data.user));
+          localStorage.setItem('token', JSON.stringify(response.data.token));
+          this.currentUserSubject.next(response.data.user);
+          this.tokenSubject.next(response.data.token);
           return response
         }));
   }
 
   logout() {
-    // console.log(this.currentUserValue);
-    // console.log(this.tokenValue);
-    // console.log(this.headers);
-    // this.headers = new HttpHeaders({
-    //   'Accept': 'application/json',
-    //   'Authorization': `Bearer ${this.tokenValue}`
-    // })
-
     return this.http.post<any>(`${environment.apiBaseUrl}/logout`, this.currentUserValue).pipe(
       map(response => {
         // console.log(response);
-        if (response.status === 'Success') {
+        if (response.headerMessage === 'Success') {
           // logout  user from api
           localStorage.removeItem('currentUser');
           localStorage.removeItem('token');
