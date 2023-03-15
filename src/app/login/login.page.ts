@@ -5,13 +5,10 @@ import { Router } from '@angular/router';
 import { truncate } from 'fs';
 import { first } from 'rxjs';
 import { User } from '../models/user.model';
+import { AlertService } from '../services/alert.service';
 import { AuthenticationService } from '../services/authentication.service';
 
-interface RESPONSE {
-  status: string;
-  message: string;
-  user: User | [];
-}
+
 
 @Component({
   selector: 'app-login',
@@ -22,13 +19,14 @@ export class LoginPage implements OnInit {
 
   loginForm: FormGroup;
   isLoggingIn: boolean = false;
-  response: RESPONSE;
-  showErrorMessage: boolean = false;
+
+
 
   constructor(
     private formbuilder: FormBuilder,
     private authenticationService: AuthenticationService,
-    private router: Router
+    private router: Router,
+    private alertService: AlertService
   ) { }
 
   ngOnInit() {
@@ -47,24 +45,19 @@ export class LoginPage implements OnInit {
   get f() { return this.loginForm.controls };
 
   onLogin(formValue) {
-    this.isLoggingIn = true;
-    this.response = null;
-    // console.log('formValue', formValue);
-    // let data: User = {
-    //   role: 'admin',
-    //   ...formValue
-    // };
     let data: User = {
       role: 'admin',
-      name: 'rolandwms',
-      password: 'rolandwms10'
+      ...formValue
     };
+    // let data: User = {
+    //   role: 'admin',
+    //   name: 'rolandwms',
+    //   password: 'rolandwms10'
+    // };
     this.onSubmit(data);
   }
 
   onTryDemo() {
-    this.isLoggingIn = true;
-    this.response = null;
     let data: User = {
       role: 'demo',
       name: 'Demo User',
@@ -75,22 +68,20 @@ export class LoginPage implements OnInit {
 
   onSubmit(data) {
     //console.log('login data', data);
+    this.isLoggingIn = true;
     this.authenticationService.login(data)
       .pipe(first())
       .subscribe({
         next: (response) => {
-          // console.log('response from api', response);
+          // console.log('login response: ' + response);
           this.loginForm.reset();
           this.isLoggingIn = false;
-          this.showErrorMessage = false;
-          this.response = response;
           this.router.navigate(['/home']);
         },
         error: (error: HttpErrorResponse) => {
-          this.showErrorMessage = true;
+          console.log(error)
           this.isLoggingIn = false;
-          this.response = error.error;
-          // console.log(this.response);
+          this.alertService.alertError(error.status, error)
         }
       });
   }

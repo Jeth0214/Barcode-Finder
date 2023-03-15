@@ -3,10 +3,11 @@ import { Router } from '@angular/router';
 import { Supplier } from '../models/supplier.model';
 import { SuppliersService } from '../services/suppliers.service';
 import { LoadingController, AlertController } from '@ionic/angular';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { AuthenticationService } from '../services/authentication.service';
 import { User } from '../models/user.model';
 import { first } from 'rxjs';
+import { AlertService } from '../services/alert.service';
 
 @Component({
   selector: 'app-home',
@@ -24,32 +25,27 @@ export class HomePage implements OnInit {
     private router: Router,
     private suppliersService: SuppliersService,
     private loadingController: LoadingController,
-    private alertController: AlertController,
+    private alertService: AlertService,
     private authService: AuthenticationService
   ) { }
 
   async ngOnInit() {
-    this.isLoading = true;
-    this.presentLoading('Loading suppliers..').then(async () => {
-      this.loadingController.dismiss();
-      this.getSuppliers();
-    })
-
-  }
-
-  ionViewWillEnter() {
     this.getSuppliers();
   }
 
 
   getSuppliers() {
+    this.isLoading = true;
+    this.user = this.authService.currentUserValue;
     this.suppliersService.getAllSuppliers().pipe(first()).subscribe({
       next: async (response: Supplier[]) => {
         this.isLoading = false;
-        this.user = this.authService.currentUserValue;
-        //this.loadingController.dismiss();
         this.suppliers = response;
         this.hasSuppliers = response.length <= 0;
+      }, error: (error: HttpErrorResponse) => {
+        console.log(error.status)
+        this.isLoading = false;
+        this.alertService.alertError(error.status, 'No Suppliers Found')
       }
     })
   }
@@ -70,18 +66,15 @@ export class HomePage implements OnInit {
     await loading.present();
     this.authService.logout().subscribe({
       next: async (response) => {
-        console.log('logout response', response);
+        this.isLoading = false;
+        await loading.dismiss();
+      }, error: async (error: HttpErrorResponse) => {
         this.isLoading = false;
         await loading.dismiss();
       }
     });
   }
 
-  async presentLoading(message) {
-    const loading = await this.loadingController.create({
-      message: message,
-    });
-    return loading.present();
-  }
+
 
 }

@@ -7,6 +7,7 @@ import { AlertController, LoadingController, ToastController } from '@ionic/angu
 import { HttpErrorResponse } from '@angular/common/http';
 import { Branch } from 'src/app/models/branch.model';
 import { first } from 'rxjs';
+import { AlertService } from 'src/app/services/alert.service';
 
 @Component({
   selector: 'app-transfer',
@@ -23,7 +24,7 @@ export class TransferPage implements OnInit {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private transferService: TransferService,
-    private alertController: AlertController,
+    private alertService: AlertService,
     private loadingController: LoadingController,
     private toastController: ToastController,
     private location: Location
@@ -34,7 +35,7 @@ export class TransferPage implements OnInit {
       this.id = +params.get('id');
       if (!this.router.getCurrentNavigation().extras.state) {
         this.isloading = true;
-        this.AlertError(404, 'No transfer found or transfer id mismatch.');
+        this.alertService.alertError(404, 'No transfer found or transfer id mismatch.');
         return;
       }
       this.transfer = this.router.getCurrentNavigation().extras.state['transfer'];
@@ -57,45 +58,20 @@ export class TransferPage implements OnInit {
         //console.log(response);
         if (!response) {
           this.isloading = true
-          this.AlertError(400, 'Bad request');
+          this.alertService.alertError(400, 'Bad request');
         }
         this.transfer = response;
       },
       error: async (error: HttpErrorResponse) => {
         this.isloading = true;
         await loading.dismiss();
-        this.AlertError(error.status, error.statusText);
+        this.alertService.alertError(error.status, error.statusText);
       }
     })
 
   }
 
-  async AlertError(status: number, message: string) {
-    const alert = await this.alertController.create({
-      'header': 'Error',
-      'subHeader': `status:  ${status}`,
-      'message': message,
-      'buttons': [
-        {
-          text: 'Try Again',
-          role: 'confirm',
-          handler: () => {
-            this.getTransfer(this.id)
-          }
-        },
-        {
-          text: 'Back',
-          role: 'cancel',
-          handler: () => {
-            this.location.back();
-            this.location.back();
-          }
-        }
-      ]
-    });
 
-    alert.present();
-  }
 
   returnHomePage() {
     this.router.navigate(['/home']);
@@ -131,7 +107,7 @@ export class TransferPage implements OnInit {
         next: async (response: Transfer) => {
           loading.dismiss();
           if (!response) {
-            this.AlertError(400, 'Delete Transfer failed');
+            this.alertService.alertError(400, 'Delete Transfer failed');
             return;
           }
           this.router.navigate([`/supplier/${transferToDelete.supplier_id}`])
@@ -139,7 +115,7 @@ export class TransferPage implements OnInit {
         },
         error: async (error: HttpErrorResponse) => {
           loading.dismiss();
-          this.AlertError(error.status, error.statusText);
+          this.alertService.alertError(error.status, error.statusText);
         }
       })
   }

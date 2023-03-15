@@ -7,6 +7,7 @@ import { AlertController, ToastController, LoadingController } from '@ionic/angu
 import { HttpErrorResponse } from '@angular/common/http';
 import { TransferService } from 'src/app/services/transfer.service';
 import { first } from 'rxjs';
+import { AlertService } from '../services/alert.service';
 
 @Component({
   selector: 'app-supplier',
@@ -25,7 +26,7 @@ export class SupplierPage implements OnInit {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private suppliersService: SuppliersService,
-    private alertController: AlertController,
+    private alertService: AlertService,
     private transferService: TransferService,
     private toastController: ToastController,
     private loadingController: LoadingController
@@ -55,7 +56,7 @@ export class SupplierPage implements OnInit {
     this.isloading = true;
     this.suppliersService.getSupplierTransfers(id).subscribe({
       next: (response) => {
-        //console.log(response);
+        console.log(response);
         if (response) {
           this.isloading = false;
           this.supplier = response.supplier;
@@ -64,8 +65,8 @@ export class SupplierPage implements OnInit {
         }
       },
       error: (error: HttpErrorResponse) => {
+        this.alertService.alertError(error.status, `No transfers from this supplier`)
 
-        this.AlertError(error.status, error.statusText);
       }
     })
   }
@@ -107,36 +108,11 @@ export class SupplierPage implements OnInit {
         },
         error: async (error: HttpErrorResponse) => {
           loading.dismiss();
-          this.AlertError(error.status, error.statusText);
+          this.alertService.alertError(error.status, `Having trouble deleting GT-${transferToDelete.gt}`)
         }
       })
   }
 
-  async AlertError(status: number, message: string) {
-    const alert = await this.alertController.create({
-      'header': 'Error',
-      'subHeader': `status:  ${status}`,
-      'message': message,
-      'buttons': [
-        {
-          text: 'Try Again',
-          role: 'confirm',
-          handler: () => {
-            this.getAllTransfersOfSupplier(this.id)
-          }
-        },
-        {
-          text: 'Back',
-          role: 'cancel',
-          handler: () => {
-            this.returnHome()
-          }
-        }
-      ]
-    });
-
-    alert.present();
-  }
 
   async presentToast(gt: number) {
     const toast = await this.toastController.create({

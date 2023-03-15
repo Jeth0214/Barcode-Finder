@@ -12,6 +12,7 @@ import { Location } from "@angular/common";
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { User } from 'src/app/models/user.model';
 import { first } from 'rxjs';
+import { AlertService } from 'src/app/services/alert.service';
 
 
 @Component({
@@ -41,7 +42,7 @@ export class AddEditTransferPage implements OnInit {
     private toastController: ToastController,
     private transferService: TransferService,
     private branchesService: BranchesService,
-    private location: Location,
+    private alertService: AlertService,
     private authService: AuthenticationService,
   ) { }
 
@@ -95,7 +96,7 @@ export class AddEditTransferPage implements OnInit {
         this.branches = branches;
       },
       (error: HttpErrorResponse) => {
-        this.alertErrorResult('Error', error.status, error.statusText);
+        this.alertService.alertError(error.status, error.statusText);
       }
     );
   }
@@ -207,7 +208,7 @@ export class AddEditTransferPage implements OnInit {
   onErrorSave(error: HttpErrorResponse) {
     this.loadingController.dismiss();
     this.isSaving = false;
-    this.alertErrorResult('Error', error.status, error.statusText);
+    this.alertService.alertError(error.status, error.statusText);
   }
 
   reset() {
@@ -219,31 +220,7 @@ export class AddEditTransferPage implements OnInit {
     this.barcode = ''
   }
 
-  async alertErrorResult(result: string, status: number, resultMessage: string) {
-    const alert = await this.alertController.create({
-      header: result,
-      subHeader: status.toString(),
-      message: resultMessage,
-      buttons: [
-        {
-          text: 'No',
-          role: 'confirm',
-          handler: () => {
-            this.reset();
-            this.goBack();
-          }
-        },
-        {
-          text: 'Yes',
-          role: 'cancel',
-          handler: () => {
-          }
-        }
-      ]
-    });
 
-    await alert.present();
-  }
 
   showBarcodePreview(bt: number, branch: Branch) {
     if (this.transferForm.controls['bt'].valid && this.transferForm.controls['branch_id'].valid) {
