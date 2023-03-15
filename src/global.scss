@@ -27,7 +27,7 @@
 
 
 .container {
-    max-width: 796px;
+    max-width: 576px;
     // padding-inline: 20px;
     margin: 0 auto;
 }
@@ -65,4 +65,44 @@
 
 .justify-content-end {
     justify-content: flex-end;
+}
+
+// style for alert 
+.errorAlertHeader {
+    .alert-wrapper {
+        .alert-head {
+
+            // header styling here eg. background
+            h2 {
+                // header text styling here eg. color, font size
+                color: red;
+            }
+        }
+    }
+}
+
+ion-searchbar {
+
+    /* overall styles here */
+    .searchbar-input-container {
+        margin-top: 20px;
+
+        /* inner input styles here */
+        input {
+
+            /* input element styles here */
+            padding: 7px 40px !important;
+            font-size: 1.125em;
+            height: 60px !important;
+        }
+
+        .searchbar-search-icon {
+            top: 21px !important;
+        }
+    }
+}
+
+ion-fab-button {
+    width: 70px;
+    height: 70px;
 }
