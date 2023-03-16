@@ -1,7 +1,7 @@
 <ion-header>
-  <ion-toolbar class="container">
-    <ion-icon *ngIf="user" slot="start" name="person-circle-outline" size="large"></ion-icon>
-    <ion-title>{{user?.name}}</ion-title>
+  <ion-toolbar class="container test ion-padding-horizontal">
+    <ion-icon *ngIf="user" slot="start" name="person-circle-outline" size="large" color="secondary"></ion-icon>
+    <ion-title color="primary ion-no-padding">{{user?.name}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -9,13 +9,15 @@
 
 <ion-content [fullscreen]="true" class="ion-margin-vertical">
   <div class="container ion-padding">
+    <div color="medium">
+      <ion-card class="ion-no-margin ion-margin-top">
+        <ion-card-content class="ion-margin-top">
+          <ngx-barcode class="ngx-barcode" [bc-height]="70" bc-element-type="img" bc-value="Find Master Barcode"
+            [bc-display-value]="true"></ngx-barcode>
+        </ion-card-content>
+      </ion-card>
+    </div>
 
-    <ion-card class="ion-no-margin ion-margin-top">
-      <ion-card-content class="ion-margin-top">
-        <ngx-barcode class="ngx-barcode" [bc-height]="70" bc-element-type="img" bc-value="Find Master Barcode"
-          [bc-display-value]="true"></ngx-barcode>
-      </ion-card-content>
-    </ion-card>
 
     <ng-container *ngIf="suppliers.length > 0">
 
@@ -46,10 +48,10 @@
 </ion-content>
 
 
-<ion-footer>
+<ion-footer class="ion-padding-horizontal">
   <ion-toolbar class="container">
-    <ion-button type="button" size="large" expand="block" color="danger" fill="solid" strong="true" (click)="onLogOut()"
-      [disabled]="isLoading">
+    <ion-button type="button" size="large" expand="block" color="secondary" fill="solid" strong="true"
+      (click)="onLogOut()" [disabled]="isLoading">
       <ion-icon name="log-out-outline"></ion-icon>
       logout
     </ion-button>

@@ -5,8 +5,8 @@
 
 .suppliers {
     text-align: center;
-    background-color: #f5f5f5;
-    padding: 10px;
+    // background-color: #f5f5f5;
+    padding: 10px 0px;
     border-radius: 5px;
 
     .supplier {
@@ -83,4 +83,8 @@
         background-color: #D60171;
         // background-image: linear-gradient(45deg, #D60171, #EAEAEA);
     }
+}
+
+ion-icon {
+    height: 70px;
 }
