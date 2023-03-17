@@ -45,15 +45,15 @@ export class LoginPage implements OnInit {
   get f() { return this.loginForm.controls };
 
   onLogin(formValue) {
-    let data: User = {
-      role: 'admin',
-      ...formValue
-    };
     // let data: User = {
     //   role: 'admin',
-    //   name: 'rolandwms',
-    //   password: 'rolandwms10'
+    //   ...formValue
     // };
+    let data: User = {
+      role: 'admin',
+      name: 'rolandwms',
+      password: 'rolandwms10'
+    };
     this.onSubmit(data);
   }
 

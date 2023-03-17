@@ -33,6 +33,10 @@ export class HomePage implements OnInit {
     this.getSuppliers();
   }
 
+  ionViewWillEnter() {
+    this.getSuppliers();
+  }
+
 
   getSuppliers() {
     this.isLoading = true;

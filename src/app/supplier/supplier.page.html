@@ -1,19 +1,13 @@
 <ion-header>
   <ion-toolbar>
-    <ion-buttons slot="start" class="position-absolute" routerLink="/home">
-      <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
-    </ion-buttons>
-    <ion-title class="ion-text-center ion-no-padding ion-text-uppercase">
-      <!-- <span *ngIf="isloading"> <ion-spinner name="lines" class="ion-margin-end"></ion-spinner> Loading
-        Transfers...</span> -->
-      <!-- <span *ngIf="!isloading">{{ supplier?.name }}</span> -->
-      <span *ngIf="!isloading">{{ supplier?.name }}</span>
+    <ion-title class="ion-text-center ion-no-padding ion-text-uppercase" color="primary">
+      <span *ngIf="!isLoading">{{ supplier?.name }}</span>
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding-horizontal ion-margin-top ">
-  <ng-container *ngIf="!isloading">
+<ion-content class=" ion-margin-top ">
+  <ng-container *ngIf="!isLoading">
     <ion-fab slot="fixed" size="large" vertical="top" horizontal="end" [edge]="true" (click)="onAdd()">
       <ion-fab-button type="button">
         <ion-icon name="add"></ion-icon>
@@ -22,18 +16,19 @@
     </ion-fab>
   </ng-container>
   <div class="container ion-margin-top">
-    <ng-container *ngIf="!isloading &&  transfers?.length > 0">
-      <ion-searchbar color="light" class="ion-padding-horizontal ion-margin-top searchbar-input-container"
+    <ng-container *ngIf="!isLoading &&  transfers?.length > 0">
+      <ion-searchbar color="light" class=" ion-margin-top searchbar-input-container ion-no-padding ion-padding-vertical"
         placeholder="Search" [(ngModel)]="searchTerm" debounce="500" animated="true">
       </ion-searchbar>
 
       <ng-container>
         <div class="ion-no-padding ion-no-margin">
-          <ion-list>
+          <ion-list class="ion-no-padding">
             <ng-container *ngFor="let transfer of transfers | filter: searchTerm">
 
-              <ion-item-sliding>
-                <ion-item button detail="true" (click)="goToItemDetails(transfer)" class="ion-margin-top">
+              <ion-item-sliding class="ion-no-padding">
+                <ion-item button detail="true" (click)="goToItemDetails(transfer)"
+                  class="ion-margin-top ion-no-padding">
                   <ion-grid class="transfer">
                     <ion-row class="ion-justify-content-between transfer ion-align-items-center">
                       <ion-col size="3" class="transfer__items">
@@ -96,3 +91,14 @@
     </div>
   </div>
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <div class="container">
+      <ion-button type="button" size="large" expand="block" color="secondary" fill="solid" strong="true"
+        routerLink="/home" [disabled]="isLoading">
+        <ion-text color="light" class="ion-text-capitalize"> Back </ion-text>
+      </ion-button>
+    </div>
+  </ion-toolbar>
+</ion-footer>

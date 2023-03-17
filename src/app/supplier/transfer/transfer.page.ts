@@ -18,7 +18,7 @@ export class TransferPage implements OnInit {
   transfer: Transfer;
   id: number;
   gt: number;
-  isloading: boolean = false;
+  isLoading: boolean = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -34,7 +34,7 @@ export class TransferPage implements OnInit {
     this.activatedRoute.paramMap.subscribe(params => {
       this.id = +params.get('id');
       if (!this.router.getCurrentNavigation().extras.state) {
-        this.isloading = true;
+        this.isLoading = true;
         this.alertService.alertError(404, 'No transfer found or transfer id mismatch.');
         return;
       }
@@ -44,7 +44,7 @@ export class TransferPage implements OnInit {
   }
 
   async getTransfer(id: number) {
-    this.isloading = true;
+    this.isLoading = true;
     const loading = await this.loadingController.create({
       message: `Loading transfer..`,
       spinner: 'circles'
@@ -53,17 +53,17 @@ export class TransferPage implements OnInit {
     loading.present();
     this.transferService.getTransfer(id).pipe(first()).subscribe({
       next: async (response) => {
-        this.isloading = false;
+        this.isLoading = false;
         await loading.dismiss();
         //console.log(response);
         if (!response) {
-          this.isloading = true
+          this.isLoading = true
           this.alertService.alertError(400, 'Bad request');
         }
         this.transfer = response;
       },
       error: async (error: HttpErrorResponse) => {
-        this.isloading = true;
+        this.isLoading = true;
         await loading.dismiss();
         this.alertService.alertError(error.status, error.statusText);
       }
