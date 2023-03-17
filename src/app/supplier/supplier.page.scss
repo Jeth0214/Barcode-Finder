@@ -1,10 +1,3 @@
-ion-button {
-    display: grid;
-    justify-content: flex-end;
-    margin-top: 10px;
-    margin-right: 8px;
-}
-
 ion-spinner {
     height: 20px;
 }
@@ -27,7 +20,7 @@ ion-spinner {
     }
 
     .transfer__details {
-        background: #c9925c;
+        background: #c1a04e;
         padding: 10px;
         border-radius: 5px;
         font-weight: 600;
@@ -36,16 +29,3 @@ ion-spinner {
 
     }
 }
-
-// ion-searchbar {
-
-//     /* overall styles here */
-//     .searchbar-input-container {
-
-//         /* inner input styles here */
-//         input {
-//             /* input element styles here */
-//             padding: 50px;
-//         }
-//     }
-// }

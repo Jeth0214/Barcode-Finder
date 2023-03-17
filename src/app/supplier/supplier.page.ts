@@ -18,7 +18,7 @@ export class SupplierPage implements OnInit {
   id: number = 1;
   transfers: Transfer[];
   supplier: Supplier;
-  isloading: boolean = false;
+  isLoading: boolean = false;
   searchTerm: string = '';
   hasTransfer: boolean = false;
 
@@ -53,18 +53,19 @@ export class SupplierPage implements OnInit {
 
 
   getAllTransfersOfSupplier(id: number) {
-    this.isloading = true;
+    this.isLoading = true;
     this.suppliersService.getSupplierTransfers(id).subscribe({
       next: (response) => {
         console.log(response);
         if (response) {
-          this.isloading = false;
+          this.isLoading = false;
           this.supplier = response.supplier;
           this.transfers = response.transfers;
           this.hasTransfer = response.transfers.length <= 0 ? true : false;
         }
       },
       error: (error: HttpErrorResponse) => {
+        this.isLoading = false;
         this.alertService.alertError(error.status, `No transfers from this supplier`)
 
       }
