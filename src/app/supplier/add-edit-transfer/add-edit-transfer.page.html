@@ -1,25 +1,23 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title class="ion-text-center">{{ title }} </ion-title>
+    <ion-title color="primary" class="ion-text-center">{{ title }} </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <div class="container">
-    <ion-card *ngIf="showBarcode">
-      <ion-card-header class="ion-no-padding ion-margin-top">
-        <ion-card-title class="ion-text-center">
-          <h2 class="ion-no-margin">Barcode Preview</h2>
-        </ion-card-title>
-      </ion-card-header>
-      <ion-card-content class="ion-no-padding ion-margin-top">
-        <ngx-barcode class="ngx-barcode" [bc-height]="70" bc-element-type="img" [bc-value]="barcode"
-          [bc-display-value]="true"></ngx-barcode>
-      </ion-card-content>
-    </ion-card>
+    <div class="barcode-container" *ngIf="showBarcode">
+
+      <ion-card>
+        <ion-card-content class="ion-no-padding ion-margin-top">
+          <ngx-barcode class="ngx-barcode" [bc-height]="70" bc-element-type="img" [bc-value]="barcode"
+            [bc-display-value]="true"></ngx-barcode>
+        </ion-card-content>
+      </ion-card>
+    </div>
 
     <form [formGroup]="transferForm" (ngSubmit)="onSubmit()">
-      <div class="ion-padding ion-margin-top">
+      <div class="ion-padding ion-margin-vertical">
         <!-- Gt form Control -->
         <ion-item fill="outline">
           <ion-label position="floating"> Gt: </ion-label>
@@ -111,31 +109,38 @@
               <span *ngIf="item.get('qty')?.errors?.['pattern']"> Quantity must whole number. </span>
             </ion-note>
           </div>
-
-
-          <ion-button [disabled]="isSaving" type="button" color="dark" shape="round" expand="block" fill="solid"
-            class="ion-margin-vertical" (click)="addItem()">
-            <ion-icon name="add-circle-outline" size="medium"></ion-icon> Add item
-          </ion-button>
         </ng-container>
 
         <!-- Actions buttons -->
-        <ion-row class="ion-justify-content-between">
-          <ion-col size="4">
-            <ion-button type="button" color="light" fill="solid" strong="true" shape="round" [disabled]="isSaving"
-              (click)="onCancel()">
-              Cancel
-            </ion-button>
-          </ion-col>
-          <ion-col size="4" class="ion-align-self-end">
-
-            <ion-button type="submit" color="primary" fill="solid" strong="true" shape="round"
-              [disabled]="!transferForm.valid && !isSaving">
-              Save
-            </ion-button>
-          </ion-col>
-        </ion-row>
+        <ion-grid class="ion-no-padding ion-margin-top">
+          <ion-row class="ion-justify-content-between">
+            <ion-col size="5">
+              <ion-button size="large" [disabled]="isSaving" type="button" color="dark" expand="block" fill="solid"
+                (click)="addItem()">
+                <ion-icon name="add-circle-outline" size="medium"></ion-icon> Add item
+              </ion-button>
+            </ion-col>
+            <ion-col size="5">
+              <ion-button size="large" type="submit" color="primary" fill="solid" strong="true" expand="block"
+                [disabled]="!transferForm.valid && !isSaving">
+                Save
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
       </div>
     </form>
   </div>
 </ion-content>
+
+
+<ion-footer>
+  <ion-toolbar>
+    <div class="container ion-no-margin">
+      <ion-button [disabled]="isSaving" (click)="onCancel()" type="button" size="large" expand="block" color="secondary"
+        fill="solid" strong="true">
+        <ion-text color="light" class="ion-text-capitalize"> Cancel </ion-text>
+      </ion-button>
+    </div>
+  </ion-toolbar>
+</ion-footer>
