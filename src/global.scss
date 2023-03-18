@@ -9,6 +9,11 @@
  * https://ionicframework.com/docs/layout/global-stylesheets
  */
 
+/* style for pages/components to use the css theme variables  */
+@forward './theme/variables.scss';
+@forward './assets/style/style.scss';
+
+
 /* Core CSS required for Ionic components to work properly */
 @import "~@ionic/angular/css/core.css";
 
@@ -25,7 +30,7 @@
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
 
-
+// Here we declare global styles and ionic components customizations
 .container {
     max-width: 576px;
     padding-inline: 10px;
@@ -45,12 +50,8 @@
     border: 0;
 }
 
-.w-100 {
-    width: 100%;
-}
-
-.position-absolute {
-    position: absolute;
+.fw-bold {
+    font-weight: bold;
 }
 
 .ngx-barcode {
@@ -58,24 +59,25 @@
     justify-content: center;
 }
 
-.row {
+
+//  barcode
+.barcode-container {
     display: flex;
-
-}
-
-.justify-content-end {
-    justify-content: flex-end;
+    justify-content: center;
+    align-content: center;
+    padding: 10px;
+    background: var(--ion-color-light-shade);
+    border-radius: 5px;
+    margin-top: 20px;
 }
 
 // style for alert 
 .errorAlertHeader {
     .alert-wrapper {
         .alert-head {
-
-            // header styling here eg. background
             h2 {
                 // header text styling here eg. color, font size
-                color: red;
+                color: var(--ion-color-danger);
             }
         }
     }
@@ -85,7 +87,7 @@ ion-searchbar {
 
     /* overall styles here */
     .searchbar-input-container {
-        margin-top: 20px;
+        margin-top: 15px;
 
         /* inner input styles here */
         input {
@@ -111,17 +113,6 @@ ion-title {
     font-weight: bold
 }
 
-//  barcode
-.barcode-container {
-    display: flex;
-    justify-content: center;
-    align-content: center;
-    padding: 10px;
-    background: lightgray;
-    border-radius: 5px;
-    margin-top: 20px;
-}
-
-.fw-bold {
-    font-weight: bold;
+ion-spinner {
+    height: 20px;
 }

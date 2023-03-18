@@ -45,14 +45,9 @@ export class LoginPage implements OnInit {
   get f() { return this.loginForm.controls };
 
   onLogin(formValue) {
-    // let data: User = {
-    //   role: 'admin',
-    //   ...formValue
-    // };
     let data: User = {
       role: 'admin',
-      name: 'rolandwms',
-      password: 'rolandwms10'
+      ...formValue
     };
     this.onSubmit(data);
   }
@@ -79,7 +74,7 @@ export class LoginPage implements OnInit {
           this.router.navigate(['/home']);
         },
         error: (error: HttpErrorResponse) => {
-          console.log(error)
+          // console.log(error)
           this.isLoggingIn = false;
           this.alertService.alertError(error.status, error)
         }

@@ -4,7 +4,6 @@
       <div class="login_image">
         <ion-img src="../../assets/images/login.png" alt=""> </ion-img>
       </div>
-      <h1>Login</h1>
 
       <ng-container *ngIf="isLoggingIn">
         <div class="ion-text-center">
@@ -40,10 +39,8 @@
           </ion-note>
         </ion-item>
 
-        <!-- <ion-button type="submit" [disabled]="!loginForm.valid || isLoggingIn" size="large" color="primary"
+        <ion-button type="submit" [disabled]="!loginForm.valid || isLoggingIn" size="large" color="primary"
           expand="block" class="ion-margin-vertical">Log
-          In</ion-button> -->
-        <ion-button type="submit" size="large" color="primary" expand="block" class="ion-margin-vertical">Log
           In</ion-button>
       </form>
 
