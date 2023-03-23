@@ -1,0 +1,101 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title color="primary" *ngIf="!isLoading" class="ion-text-center ion-no-padding">GT-{{transfer?.gt}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-margin-top">
+  <div class="container" *ngIf="!isLoading">
+    <div class="barcode-container">
+      <ion-card>
+        <ion-card-content>
+          <ngx-barcode class="ngx-barcode" [bc-height]="90" bc-element-type="img"
+            [bc-value]="'NA' + transfer?.branch?.branch_code +'-BT-' + transfer?.bt"
+            [bc-display-value]="true"></ngx-barcode>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <ion-card class="ion-no-margin ion-margin-vertical">
+      <ion-card-header class="ion-no-margin">
+        <ion-card-title>From: <ion-text color="tertiary" class="fw-bold">{{ transfer.branch?.name}} Warehouse</ion-text>
+        </ion-card-title>
+        <ion-card-subtitle>Date: {{ transfer?.created_at | date:'shortDate':'dd/MM/YYYY'}}</ion-card-subtitle>
+
+      </ion-card-header>
+
+      <ion-card-content>
+        <div class="items">
+          <ion-grid class="ion-no-padding">
+            <ion-row class="ion-justify-content-between ion-no-padding">
+
+              <ion-col size="4">
+                <ion-text color="secondary" class="items__title"> ITEMS </ion-text>
+              </ion-col>
+              <ion-col size="4" class="ion-text-uppercase">
+
+                <ion-text color="secondary" class="items__title"> lot </ion-text>
+
+              </ion-col>
+              <ion-col size="4" class="ion-text-uppercase ion-text-end">
+
+                <ion-text color="secondary" class="items__title"> qty</ion-text>
+
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+          <div *ngFor="let item of transfer?.items; index as i">
+
+            <ion-grid class="ion-no-padding ion-margin-vertical">
+              <ion-row class="ion-justify-content-between ion-no-padding">
+
+                <ion-col size="4" class="item__number">
+                  {{ i + 1}}
+                </ion-col>
+                <ion-col size="4" class="ion-text-uppercase">
+
+                  <ion-text color="primary"> {{item.lot}}</ion-text>
+
+                </ion-col>
+                <ion-col size="4" class="ion-text-uppercase ion-text-end">
+
+                  <ion-text color="primary"> {{item.qty}}</ion-text>
+
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </div>
+        </div>
+
+
+        <ion-grid class="ion-no-padding">
+          <ion-row class="ion-justify-content-between ion-no-padding">
+            <ion-col size="5">
+              <ion-button size="large" expand="block" class="ion-margin-end" (click)="onEdit(transfer)">
+                <ion-text color="light" class="ion-text-capitalize"> Edit </ion-text>
+              </ion-button>
+
+            </ion-col>
+            <ion-col size="5">
+              <ion-button size="large" expand="block" color="danger" (click)="onDelete(transfer)">
+                <ion-text color="light" class="ion-text-capitalize"> Delete </ion-text>
+              </ion-button>
+
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <div class="container ion-no-margin">
+      <ion-button type="button" size="large" expand="block" color="secondary" fill="solid" strong="true"
+        routerLink="/supplier/{{transfer?.supplier_id}}" [disabled]="isLoading">
+        <ion-text color="light" class="ion-text-capitalize"> Back </ion-text>
+      </ion-button>
+    </div>
+  </ion-toolbar>
+</ion-footer>

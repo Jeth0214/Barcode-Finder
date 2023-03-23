@@ -1,0 +1,81 @@
+@use '../../../theme/variables.scss';
+
+.suppliers {
+    text-align: center;
+    border-radius: 5px;
+
+    .supplier {
+        border-radius: 8px;
+        padding: 10px;
+        box-shadow: rgb(0 0 0 / 12%) 0px 4px 16px;
+        cursor: pointer;
+
+
+        .supplier__link {
+            transition: all 0.5s ease-in-out;
+            color: white;
+
+            &:hover {
+                transform: scale(1.1);
+            }
+
+            .supplier__image {
+                img {
+                    width: 50px;
+                }
+            }
+
+            .supplier__name {
+                font-weight: 700;
+                margin-bottom: 0;
+                margin-top: 0;
+                font-size: 18px;
+                text-transform: uppercase;
+            }
+
+            .supplier__code {
+                font-weight: 700;
+                margin-top: 0;
+                margin-bottom: 0;
+            }
+        }
+
+
+
+    }
+
+    .supplier--gsk {
+        background-color: #F7A508;
+        // background-image: linear-gradient(45deg, #E8490E, #EAEAEA);
+    }
+
+    .supplier--aspen {
+        background-color: #ED1D24;
+        // background-image: linear-gradient(45deg, #ED1D24, #EAEAEA);
+    }
+
+    .supplier--roche {
+        background-color: #0072B7;
+        // background-image: linear-gradient(45deg, #0072B7, #EAEAEA);
+    }
+
+    .supplier--atnahs {
+        background-color: #C22F84;
+        // background-image: linear-gradient(45deg, #47418E, #EAEAEA);
+    }
+
+    .supplier--msd {
+        background-color: #007B75;
+        // background-image: linear-gradient(45deg, #007B75, #EAEAEA);
+    }
+
+    .supplier--pharma {
+        background-color: #0070B0;
+        // background-image: linear-gradient(45deg, #0070B0, #EAEAEA);
+    }
+
+    .supplier--organon {
+        background-color: #D60171;
+        // background-image: linear-gradient(45deg, #D60171, #EAEAEA);
+    }
+}

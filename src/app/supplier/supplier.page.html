@@ -1,0 +1,104 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title class="ion-text-center ion-no-padding ion-text-uppercase" color="primary">
+      <span *ngIf="!isLoading">{{ supplier?.name }}</span>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class=" ion-margin-top ">
+  <ng-container *ngIf="!isLoading">
+    <ion-fab slot="fixed" size="large" vertical="top" horizontal="end" [edge]="true" (click)="onAdd()">
+      <ion-fab-button type="button">
+        <ion-icon name="add"></ion-icon>
+      </ion-fab-button>
+      <span class="sr-only">Add button</span>
+    </ion-fab>
+  </ng-container>
+  <div class="container ion-margin-top">
+    <ng-container *ngIf="!isLoading &&  transfers?.length > 0">
+      <ion-searchbar color="light" class=" ion-margin-top searchbar-input-container ion-no-padding ion-padding-vertical"
+        placeholder="Search" [(ngModel)]="searchTerm" debounce="500" animated="true">
+      </ion-searchbar>
+
+      <ng-container>
+        <div class="ion-no-padding ion-no-margin">
+          <ion-list class="ion-no-padding">
+            <ng-container *ngFor="let transfer of transfers | filter: searchTerm">
+
+              <ion-item-sliding class="ion-no-padding">
+                <ion-item button detail="true" (click)="goToItemDetails(transfer)"
+                  class="ion-margin-top ion-no-padding">
+                  <ion-grid class="transfer">
+                    <ion-row class="ion-justify-content-between transfer ion-align-items-center">
+                      <ion-col size="3" class="transfer__items">
+
+                        <p> {{ transfer.branch.branch_code}}</p>
+
+                      </ion-col>
+                      <ion-col size="9">
+                        <ion-grid class=" ion-no-padding">
+                          <ion-row class="ion-justify-content-between transfer__details">
+                            <ion-col size="5">
+                              <div>
+                                <ion-text color="dark" class="ion-no-margin">GT-{{transfer?.gt}}</ion-text>
+                              </div>
+                              <div class="ion-no-margin ion-margin-top">
+                                <ion-text color="dark">BT-{{transfer?.bt}}</ion-text>
+                              </div>
+                            </ion-col>
+                            <ion-col size="6">
+                              <div class="ion-text-end">
+                                Items:
+                                <ion-text color="light">{{transfer.items.length}}</ion-text>
+                              </div>
+                              <div class="ion-no-margin ion-margin-top ion-text-end">
+                                <ion-text color="secondary">{{transfer?.created_at | date:'shortDate':'dd/MM/YY'
+                                  }}</ion-text>
+                              </div>
+                            </ion-col>
+                          </ion-row>
+                        </ion-grid>
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
+
+                </ion-item>
+
+                <ion-item-options side="end" class="ion-margin-top ion-no-margin">
+                  <ion-item-option color="primary" (click)="onEdit(transfer)">
+                    <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+                  </ion-item-option>
+                  <ion-item-option color="danger" (click)="onDelete(transfer)" expandable>
+                    <ion-icon slot="icon-only" name="trash"></ion-icon>
+                  </ion-item-option>
+                </ion-item-options>
+              </ion-item-sliding>
+            </ng-container>
+          </ion-list>
+        </div>
+      </ng-container>
+
+    </ng-container>
+
+    <div *ngIf="hasTransfer">
+      <div class="container ">
+        <ion-img class="ion-margin-top" src="../assets/images/sorry-item-not-found.png" alt="no found item">
+        </ion-img>
+        <h3 class="ion-text-center">No Transfer Yet. Add new one.</h3>
+      </div>
+
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <div class="container">
+      <ion-button type="button" size="large" expand="block" color="secondary" fill="solid" strong="true"
+        routerLink="/home" [disabled]="isLoading">
+        <ion-text color="light" class="ion-text-capitalize"> Back </ion-text>
+      </ion-button>
+    </div>
+  </ion-toolbar>
+</ion-footer>

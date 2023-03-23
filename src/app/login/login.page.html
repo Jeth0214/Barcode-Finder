@@ -1,0 +1,68 @@
+<ion-content class="ion-padding">
+  <div class="login">
+    <div class="container">
+      <div class="login_image">
+        <ion-img src="../../assets/images/login.png" alt=""> </ion-img>
+      </div>
+
+      <ng-container *ngIf="isLoggingIn">
+        <div class="ion-text-center">
+          <ion-spinner color="primary"></ion-spinner>
+          <p>logging in..</p>
+        </div>
+
+      </ng-container>
+
+      <!-- Form section -->
+      <form [formGroup]="loginForm" (ngSubmit)="onLogin(loginForm.value)">
+
+        <ion-item fill="outline" class="ion-margin-vertical">
+          <ion-label for="name" position="floating">Username</ion-label>
+          <ion-input formControlName="name" id="name"></ion-input>
+          <ion-icon name="person-outline" slot="start"></ion-icon>
+          <ion-note class="ion-no-margin" slot="error" *ngIf="f['name'].errors && f['name'].touched" color="danger">
+            <ion-icon name="alert-circle-outline" color="danger" size="medium"></ion-icon>
+            <span> Username is a must. </span>
+          </ion-note>
+        </ion-item>
+
+
+
+        <ion-item fill="outline">
+          <ion-label for="password" position="floating">Password</ion-label>
+          <ion-input type="password" formControlName="password" id="password"></ion-input>
+          <ion-icon name="key-outline" slot="start"></ion-icon>
+          <ion-note class="ion-no-margin" slot="error" *ngIf="f['password'].errors && f['password'].touched"
+            color="danger">
+            <ion-icon name="alert-circle-outline" color="danger" size="medium"></ion-icon>
+            <span> Password is a must. </span>
+          </ion-note>
+        </ion-item>
+
+        <ion-button type="submit" [disabled]="!loginForm.valid || isLoggingIn" size="large" color="primary"
+          expand="block" class="ion-margin-vertical">Log
+          In</ion-button>
+      </form>
+
+      <!-- Or section -->
+      <div class="or_section">
+        <p class="or_text">OR</p>
+      </div>
+
+      <!-- Demo button -->
+      <ion-button (click)="onTryDemo()" [disabled]="isLoggingIn" size="large" color="dark" expand="block"
+        class="ion-margin-vertical">Try
+        Demo</ion-button>
+    </div>
+
+    <div class="app ion-text-center">
+      <div class="app_title">
+        <ion-icon name="barcode-outline"></ion-icon>
+        Barcode Finder
+      </div>
+      <div class="app_verion">
+        <ion-text color="danger">Version 1.0</ion-text>
+      </div>
+    </div>
+  </div>
+</ion-content>

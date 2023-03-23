@@ -1,20 +1,61 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
+<ion-header>
+  <ion-toolbar class="container ">
+    <ion-icon *ngIf="user" slot="start" name="person-circle-outline" size="large" color="secondary"></ion-icon>
+    <ion-title color="primary ion-no-padding">{{user?.name}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+
+<ion-content [fullscreen]="true" class="ion-margin-vertical">
+  <div class="container">
+    <div class="barcode-container">
+      <ion-card>
+        <ion-card-content class="ion-margin-top">
+          <ngx-barcode class="ngx-barcode" [bc-height]="100" bc-element-type="img" bc-value="Find Master Barcode"
+            [bc-display-value]="true"></ngx-barcode>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+
+    <ng-container *ngIf="suppliers.length > 0">
+
+      <div class="suppliers ion-margin-top">
+        <ion-row class="ion-justify-content-between">
+          <ion-col *ngFor="let supplier of suppliers" size="5" class="supplier ion-margin-bottom"
+            [ngClass]="'supplier--' + supplier.name" routerLink="/supplier/{{supplier.id}}">
+            <div class="supplier__link">
+              <div class="supplier__image">
+                <img [src]="'../../assets/images/home/' + supplier.image +'-solid.svg'" alt="" aria-hidden="true">
+                <span class="sr-only"> {{ supplier.name }} Logo</span>
+              </div>
+              <h3 class="supplier__name"> {{supplier.name}} </h3>
+              <p class="supplier__code"> {{supplier.brand}} </p>
+            </div>
+          </ion-col>
+        </ion-row>
+      </div>
+    </ng-container>
   </div>
+  <ng-container *ngIf="hasSuppliers">
+    <div class="container ">
+      <ion-img class="ion-margin-top" src="../assets/images/sorry-item-not-found.png" alt="no found item">
+      </ion-img>
+      <h3 class="ion-text-center">No Suppliers Found.</h3>
+    </div>
+  </ng-container>
 </ion-content>
+
+
+<ion-footer>
+  <ion-toolbar>
+    <div class="container">
+
+      <ion-button type="button" size="large" expand="block" color="secondary" fill="solid" strong="true"
+        (click)="onLogOut()" [disabled]="isLoading">
+        <ion-text color="light" class="ion-text-capitalize"> logout</ion-text>
+      </ion-button>
+    </div>
+  </ion-toolbar>
+</ion-footer>
