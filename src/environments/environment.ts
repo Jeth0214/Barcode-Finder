@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   // apiBaseUrl: 'http://127.0.0.1:8000/api',
-  // apiBaseUrl: 'http://192.168.100.17:8000/api',
+  // apiBaseUrl: 'http://com.Jeth.barcodeFinder:8000/api',
   apiBaseUrl: 'http://192.168.250.38:8000/api',
 };
 
