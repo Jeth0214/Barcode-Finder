@@ -70,9 +70,12 @@ export class HomePage implements OnInit {
     await loading.present();
     this.authService.logout().subscribe({
       next: async (response) => {
+        console.log('Logout', response)
         this.isLoading = false;
         await loading.dismiss();
       }, error: async (error: HttpErrorResponse) => {
+        console.log('Logout Error', error);
+
         this.isLoading = false;
         await loading.dismiss();
       }
