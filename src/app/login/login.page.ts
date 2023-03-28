@@ -68,7 +68,7 @@ export class LoginPage implements OnInit {
       .pipe(first())
       .subscribe({
         next: (response) => {
-          console.log('login response: ' + response);
+          //  console.log('login response: ' + response);
           this.loginForm.reset();
           this.isLoggingIn = false;
           this.router.navigate(['/home']);
