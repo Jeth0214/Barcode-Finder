@@ -27,7 +27,7 @@
             [ngClass]="'supplier--' + supplier.name" routerLink="/supplier/{{supplier.id}}">
             <div class="supplier__link">
               <div class="supplier__image">
-                <img [src]="'../../assets/images/home/' + supplier.image +'-solid.svg'" alt="" aria-hidden="true">
+                <img [src]="'./assets/images/home/' + supplier.image +'-solid.svg'" alt="" aria-hidden="true">
                 <span class="sr-only"> {{ supplier.name }} Logo</span>
               </div>
               <h3 class="supplier__name"> {{supplier.name}} </h3>
@@ -42,13 +42,13 @@
     <!-- No Suppliers Found -->
     <ng-container *ngIf="hasSuppliers">
       <div class="container ">
-        <ion-img class="ion-margin-top" src="../assets/images/sorry-item-not-found.png" alt="no found item">
+        <ion-img class="ion-margin-top" src="./assets/images/sorry-item-not-found.png" alt="no found item">
         </ion-img>
         <h3 class="ion-text-center">No Suppliers Found.</h3>
       </div>
     </ng-container>
 
-    <!-- Manual Genrator button -->
+    <!-- Manual Generator button -->
     <ng-container *ngIf="showGeneratorButton">
       <ion-button class="ion-margin-bottom" routerLink="/manual-generator" type="button" size="large" expand="block"
         color="primary" fill="solid" [disabled]="isLoading">
