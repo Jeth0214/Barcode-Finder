@@ -10,9 +10,12 @@
           <ion-spinner color="primary"></ion-spinner>
           <p>logging in..</p>
         </div>
-
       </ng-container>
 
+      <ion-text color="warning">
+        <ion-icon name="alert-circle-outline" color="warning"></ion-icon>
+        This form is for admin only.
+      </ion-text>
       <!-- Form section -->
       <form [formGroup]="loginForm" (ngSubmit)="onLogin(loginForm.value)">
 
@@ -49,10 +52,25 @@
         <p class="or_text">OR</p>
       </div>
 
-      <!-- Demo button -->
-      <ion-button (click)="onTryDemo()" [disabled]="isLoggingIn" size="large" color="dark" expand="block"
-        class="ion-margin-vertical">Try
-        Demo</ion-button>
+
+      <!-- Actions buttons -->
+      <ion-grid class="ion-no-padding ion-margin-bottom">
+        <ion-row class="ion-justify-content-between">
+          <ion-col size="5">
+            <!-- Demo button -->
+            <ion-button (click)="onTryDemo()" [disabled]="isLoggingIn" size="large" color="dark" expand="block">
+              <ion-text color="warning"> Try Demo </ion-text>
+            </ion-button>
+          </ion-col>
+          <ion-col size="5">
+
+            <ion-button [disabled]="isLoggingIn" routerLink="/manual-generator" type="button" size="large"
+              expand="block" color="primary" fill="solid">
+              <ion-text color="light" class="ion-text-capitalize"> Manual </ion-text>
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
     </div>
 
     <div class="app ion-text-center">
@@ -61,7 +79,7 @@
         Barcode Finder
       </div>
       <div class="app_verion">
-        <ion-text color="danger">Version 1.0</ion-text>
+        <ion-text color="warning">Version 1.0</ion-text>
       </div>
     </div>
   </div>

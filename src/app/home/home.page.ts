@@ -20,6 +20,7 @@ export class HomePage implements OnInit {
   hasSuppliers: boolean = false;
   user: User;
   isLoading: boolean = false;
+  showGeneratorButton: boolean = false;
 
   constructor(
     private router: Router,
@@ -46,10 +47,12 @@ export class HomePage implements OnInit {
         this.isLoading = false;
         this.suppliers = response;
         this.hasSuppliers = response.length <= 0;
+        this.showGeneratorButton = true;
       }, error: (error: HttpErrorResponse) => {
         console.log(error.status)
         this.isLoading = false;
-        this.alertService.alertError(error.status, 'No Suppliers Found')
+        this.alertService.alertError(error.status, 'No Suppliers Found');
+        this.showGeneratorButton = true;
       }
     })
   }

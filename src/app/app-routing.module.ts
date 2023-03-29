@@ -21,7 +21,11 @@ const routes: Routes = [
     path: 'supplier/:id',
     loadChildren: () => import('./supplier/supplier.module').then(m => m.SupplierPageModule),
     canActivate: [AuthGuard]
+  },  {
+    path: 'manual-generator',
+    loadChildren: () => import('./manual-generator/manual-generator.module').then( m => m.ManualGeneratorPageModule)
   },
+
 
 
 ];
