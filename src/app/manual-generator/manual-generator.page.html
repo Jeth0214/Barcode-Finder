@@ -1,0 +1,77 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title class="ion-text-center ion-no-padding ion-text-uppercase" color="primary">
+      Barcode Generator
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-margin-vertical">
+  <div class="container">
+    <!-- Generated barcode -->
+    <div class="barcode-container">
+      <ion-card>
+        <ion-card-content class="ion-margin-top">
+          <ngx-barcode class="ngx-barcode" [bc-height]="70" bc-element-type="img" [bc-value]="generatedBarcode"
+            [bc-display-value]="true"></ngx-barcode>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <form [formGroup]="generatorForm" (ngSubmit)="onGenerateBarcode()">
+      <!-- Number form Control -->
+      <ion-item fill="outline" class="ion-margin-top">
+        <ion-label position="floating"> Number: </ion-label>
+        <ion-input type="number" formControlName="number" color="primary"></ion-input>
+        <ion-note slot="error" *ngIf="!number.valid && number.touched">
+          <ion-icon name="alert-circle-outline" color="danger"></ion-icon>
+          Please provide the number.
+        </ion-note>
+      </ion-item>
+
+      <!-- Code form Control -->
+      <ion-item fill="outline" class="ion-margin-top">
+        <ion-label position="floating"> Code: </ion-label>
+        <ion-input type="number" formControlName="code" color="primary"></ion-input>
+        <ion-note slot="error" *ngIf="!code.valid && code.touched">
+          <ion-icon name="alert-circle-outline" color="danger"></ion-icon>
+          Please provide the branch code.
+        </ion-note>
+      </ion-item>
+
+      <!-- Types -->
+      <ion-item fill="outline" class="ion-margin-vertical">
+        <ion-label>Barcode Type</ion-label>
+        <ion-select placeholder="Types" formControlName="type" name="type">
+          <ion-select-option *ngFor="let type of types" [value]="type.value">
+            {{type.name}}
+          </ion-select-option>
+        </ion-select>
+
+        <ion-note slot="error" *ngIf="!type.valid && type.touched">
+          <ion-icon name="alert-circle-outline" color="danger"></ion-icon>
+          Please select a barcode type.
+        </ion-note>
+      </ion-item>
+
+      <!-- Generate Button -->
+      <ion-button size="large" type="submit" color="primary" fill="solid" strong="true" expand="block"
+        [disabled]="!generatorForm.valid && !isGenerating">
+        Generate
+      </ion-button>
+
+    </form>
+
+  </div>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <div class="container">
+      <ion-button type="button" size="large" expand="block" color="secondary" fill="solid" strong="true"
+        routerLink="/home">
+        <ion-text color="light" class="ion-text-capitalize"> Back </ion-text>
+      </ion-button>
+    </div>
+  </ion-toolbar>
+</ion-footer>

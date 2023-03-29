@@ -37,14 +37,27 @@
         </ion-row>
       </div>
     </ng-container>
+
+
+    <!-- No Suppliers Found -->
+    <ng-container *ngIf="hasSuppliers">
+      <div class="container ">
+        <ion-img class="ion-margin-top" src="../assets/images/sorry-item-not-found.png" alt="no found item">
+        </ion-img>
+        <h3 class="ion-text-center">No Suppliers Found.</h3>
+      </div>
+    </ng-container>
+
+    <!-- Manual Genrator button -->
+    <ng-container *ngIf="showGeneratorButton">
+      <ion-button class="ion-margin-bottom" routerLink="/manual-generator" type="button" size="large" expand="block"
+        color="primary" fill="solid" [disabled]="isLoading">
+        <ion-text color="light" class="ion-text-capitalize"> Generate Manually </ion-text>
+      </ion-button>
+    </ng-container>
+
   </div>
-  <ng-container *ngIf="hasSuppliers">
-    <div class="container ">
-      <ion-img class="ion-margin-top" src="../assets/images/sorry-item-not-found.png" alt="no found item">
-      </ion-img>
-      <h3 class="ion-text-center">No Suppliers Found.</h3>
-    </div>
-  </ng-container>
+
 </ion-content>
 
 
