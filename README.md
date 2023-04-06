@@ -7,6 +7,7 @@ This app is my personal project as extension on our warehouse system. Before , t
 - [Overview](#overview)
   - [User Stories](#user-stories)
   - [Screenshot](#screenshot)
+  - [Live Priview](#live-preview)
 - [My process](#my-process)
   - [Built with](#built-with)
 
@@ -29,9 +30,12 @@ Users should be able to:
 
 ### Screenshot
 
-![](android\app\src\main\ic_launcher-playstore.png)
+![](/android/app/src/main/ic_launcher-playstore.png)
 ![](/src/assets/images/screenhots/Screenshot_20230329-081430_Barcode%20Finder.jpg)
 ![](/src/assets/images/screenhots/Screenshot_20230329-081547_Barcode%20Finder.jpg)
+
+### Live Preview 
+[Barcode Finder](https://jeth0214.github.io/Barcode-Finder/)
 
 
 
